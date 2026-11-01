@@ -2,7 +2,12 @@
 
 Resultado final: um link como `https://lulapad.vercel.app`, que abre direto no navegador (celular ou PC).
 
-## 1. Banco de dados (Neon, plano grátis)
+## 1. Banco de dados (Supabase ou Neon, plano grátis)
+**Supabase (recomendado):** crie conta em https://supabase.com e um projeto (anote a senha do banco).
+Clique em **Connect**, escolha **Transaction pooler**, copie a URL, troque `[YOUR-PASSWORD]` pela senha
+e acrescente `?sslmode=require` no final. Essa URL é a `DATABASE_URL`.
+
+**Neon (alternativa):**
 1. Crie conta em https://neon.tech e um projeto (região São Paulo, se houver).
 2. Copie a **Connection string** (`postgres://...?sslmode=require`). É o `DATABASE_URL`.
 As tabelas são criadas sozinhas na primeira requisição.
