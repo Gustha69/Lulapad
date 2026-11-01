@@ -6,7 +6,14 @@ let ready;
 function getPool() {
   if (!pool) {
     if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL não configurada');
-    pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 1, idleTimeoutMillis: 10000 });
+    // Bancos na nuvem (Supabase, Neon, Railway...) exigem SSL. Se a URL pedir sslmode,
+    // usamos SSL sem checar a cadeia de certificados (evita erro "self-signed certificate").
+    let url = process.env.DATABASE_URL, ssl;
+    if (/[?&]sslmode=/.test(url)) {
+      url = url.replace(/([?&])sslmode=[^&]*&?/, '$1').replace(/[?&]$/, '');
+      ssl = { rejectUnauthorized: false };
+    }
+    pool = new Pool({ connectionString: url, ssl, max: 1, idleTimeoutMillis: 10000 });
   }
   return pool;
 }
