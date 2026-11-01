@@ -1,0 +1,15 @@
+{
+  "name": "lulapad",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bigodes, o Bicho de Terno - pet virtual com créditos pagos via Stripe",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "dev": "vercel dev",
+    "test": "node --test test/api.test.js"
+  },
+  "dependencies": {
+    "pg": "^8.13.0",
+    "stripe": "^17.5.0"
+  }
+}
