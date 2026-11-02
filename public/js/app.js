@@ -124,10 +124,7 @@
       var b = c.createBuffer(1, 1, 22050), src = c.createBufferSource();
       src.buffer = b; src.connect(c.destination); src.start(0);
     } catch (e) {}
-    if (c.state === 'running') {
-      audioReady = true;
-      ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'click', 'keydown'].forEach(function (ev) { document.removeEventListener(ev, unlockAudio, true); });
-    }
+    if (c.state === 'running') audioReady = true;
   }
   ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'click', 'keydown'].forEach(function (ev) { document.addEventListener(ev, unlockAudio, true); });
   function stopSound() { if (currentSrc) { try { currentSrc.stop(); } catch (e) {} currentSrc = null; } }
@@ -136,13 +133,17 @@
     var url = (SOUNDS[CHAR.id] && SOUNDS[CHAR.id][name]) || (SOUNDS.all && SOUNDS.all[name]);
     var c = getCtx();
     if (url && c && buffers[url]) {
-      try {
-        c.resume(); stopSound();
-        var src = c.createBufferSource(); src.buffer = buffers[url];
-        var g = c.createGain(); g.gain.value = 1;
-        src.connect(g); g.connect(c.destination); src.start(0); currentSrc = src;
-        return;
-      } catch (e) {}
+      var go = function () {
+        try {
+          stopSound();
+          var src = c.createBufferSource(); src.buffer = buffers[url];
+          var g = c.createGain(); g.gain.value = 1;
+          src.connect(g); g.connect(c.destination); src.start(0); currentSrc = src;
+        } catch (e) { cry(SYNTH_PITCH[name] || 1); }
+      };
+      if (c.state === 'running') go();
+      else { var r = c.resume(); if (r && r.then) r.then(go, function () { cry(SYNTH_PITCH[name] || 1); }); else go(); }
+      return;
     }
     cry(SYNTH_PITCH[name] || 1);
   }
@@ -352,22 +353,24 @@
   function nudgeCredits() { var c = $('#creditsBtn'); c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake'); }
   function noCredits() { nudgeCredits(); toast('Créditos insuficientes. Compre mais para continuar.'); openShop(); }
 
-  /* o servidor desconta o crédito; o efeito só acontece se ele confirmar */
+  /* O efeito e o som começam NO TOQUE (sem esperar a rede). O servidor desconta o crédito de verdade;
+     se ele recusar, o saldo e os pontos voltam e o som para. */
   function useItem(it) {
     if (spending) return;
     if (s.credits < it.cost) { noCredits(); return; }
     spending = true;
+    var before = s.credits;
+    s.credits -= it.cost;
+    score(it.side, it.cost);
+    ACTIONS[it.id]();
     api('/api/use-item', { itemId: it.id }).then(function (d) {
-      s.credits = d.credits;
-      score(it.side, it.cost);
-      ACTIONS[it.id]();
+      s.credits = d.credits; render();
     }).catch(function (err) {
-      if (err.status === 402) {
-        if (err.data && typeof err.data.credits === 'number') s.credits = err.data.credits;
-        render(); noCredits();
-      } else {
-        toast('Não consegui falar com o servidor. Tente de novo.');
-      }
+      s.credits = (err.data && typeof err.data.credits === 'number') ? err.data.credits : before;
+      s[it.side] = Math.max(0, s[it.side] - it.cost);
+      stopSound(); render();
+      if (err.status === 402) noCredits();
+      else toast('Não consegui falar com o servidor. O item não foi cobrado.');
     }).then(function () { spending = false; });
   }
 
@@ -465,6 +468,7 @@
     else poke();
   });
 
+  try { fetch('/api/use-item').catch(function () {}); } catch (e) {}
   loadBuffers();
   renderItems();
   render();
