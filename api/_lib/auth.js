@@ -20,14 +20,15 @@ function parseCookies(req) {
   return out;
 }
 
+const sessionValue = (userId) => userId + '.' + sign(userId);
 function setSession(res, userId) {
-  const v = userId + '.' + sign(userId);
+  const v = sessionValue(userId);
   const secure = process.env.NODE_ENV === 'production' || process.env.VERCEL ? '; Secure' : '';
   res.setHeader('Set-Cookie', `${COOKIE}=${v}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${MAX_AGE}${secure}`);
 }
 
-function userIdFromRequest(req) {
-  const raw = parseCookies(req)[COOKIE];
+function userIdFromRequest(req, cookieName) {
+  const raw = parseCookies(req)[cookieName || COOKIE];
   if (!raw) return null;
   const i = raw.lastIndexOf('.');
   if (i < 0) return null;
@@ -36,6 +37,16 @@ function userIdFromRequest(req) {
   const a = Buffer.from(mac), b = Buffer.from(expected);
   if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
   return id;
+}
+
+// Identidade leve (sem banco): conta logada ou visitante anônimo (cookie assinado).
+const ANON = 'lp_anon';
+function identify(req) { return userIdFromRequest(req) || userIdFromRequest(req, ANON); }
+function ensureAnon(req, res) {
+  if (identify(req)) return;
+  const id = crypto.randomUUID();
+  const secure = process.env.NODE_ENV === 'production' || process.env.VERCEL ? '; Secure' : '';
+  res.setHeader('Set-Cookie', `${ANON}=${id}.${sign(id)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${MAX_AGE}${secure}`);
 }
 
 // Código tipo "K7M2-9QXP-4WRD" (alfabeto sem 0/O/1/I), ~60 bits.
@@ -53,15 +64,14 @@ const normalizeCode = (c) => {
 
 async function createGuest() {
   const welcome = Math.max(0, parseInt(process.env.WELCOME_CREDITS ?? '10', 10) || 0);
-  return db.tx(async (c) => {
-    const r = await c.query(
-      'INSERT INTO users (recovery_code, credits) VALUES ($1, $2) RETURNING id, credits, recovery_code',
-      [newRecoveryCode(), welcome]
-    );
-    const u = r.rows[0];
-    if (welcome) await c.query("INSERT INTO ledger (user_id, delta, reason) VALUES ($1, $2, 'welcome')", [u.id, welcome]);
-    return u;
-  });
+  // uma única instrução atômica: cria a conta e registra os créditos de boas-vindas
+  const r = await db.query(
+    `WITH u AS (INSERT INTO users (recovery_code, credits) VALUES ($1, $2) RETURNING id, credits, recovery_code),
+          l AS (INSERT INTO ledger (user_id, delta, reason) SELECT id, $2::int, 'welcome' FROM u WHERE $2::int > 0)
+     SELECT id, credits, recovery_code FROM u`,
+    [newRecoveryCode(), welcome]
+  );
+  return r.rows[0];
 }
 
 async function getUser(id) {
@@ -73,8 +83,8 @@ async function getUser(id) {
 async function requireUser(req, res) {
   const id = userIdFromRequest(req);
   let u = id ? await getUser(id).catch(() => null) : null;
-  if (!u) { u = await createGuest(); setSession(res, u.id); }
+  if (!u) { u = await createGuest(); u.created = true; setSession(res, u.id); }
   return u;
 }
 
-module.exports = { requireUser, getUser, setSession, normalizeCode, userIdFromRequest };
+module.exports = { createGuest, sessionValue, requireUser, getUser, setSession, normalizeCode, userIdFromRequest, identify, ensureAnon };

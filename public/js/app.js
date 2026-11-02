@@ -28,10 +28,9 @@
     { id: 'stock', name: 'Queda da bolsa', cost: 15, side: 'bad' },
     { id: 'finger', name: 'Dedinho', cost: 30, side: 'bad' }
   ];
-  var WIN_AT = 100;
 
   /* credits NÃO é salvo localmente: o saldo real mora no servidor */
-  var s = { credits: 0, good: 0, bad: 0 };
+  var s = { credits: 0, good: 0, bad: 0, mood: 0 };
   try {
     var saved = JSON.parse(localStorage.getItem(KEY) || 'null');
     if (saved) {
@@ -177,37 +176,76 @@
     try { localStorage.setItem(KEY, JSON.stringify({ good: s.good, bad: s.bad })); } catch (e) {}
   }
 
-  /* cabo de guerra: azul à esquerda, vermelho à direita; a bandeira fica na fronteira entre os dois */
-  /* humor: net = love - hate. Quanto mais love, mais feliz; quanto mais hate, mais machucado */
+  /* ---------- placar GLOBAL (todos os jogadores) ----------
+     G = último total do servidor. Meus pontos recentes (bumps) aparecem na hora, mas só até o total do servidor
+     passar a incluí-los. Cada ponto leva o relógio do servidor (ts) de quando foi aceito; o total do servidor
+     também vem com o relógio dele. Total.ts >= ponto.ts significa "já está incluído": aí o ponto sai da lista. */
+  var G = { love: 0, hate: 0 }, unsent = { love: 0, hate: 0 }, bumps = [], lastTs = 0;
+  var compactFmt = (window.Intl && Intl.NumberFormat) ? new Intl.NumberFormat('pt-BR', { notation: 'compact', maximumFractionDigits: 1 }) : null;
+  function fmt(n) { return (n >= 10000 && compactFmt) ? compactFmt.format(n) : String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+  function sideKey(side) { return side === 'good' ? 'love' : 'hate'; }
+  function pending(k) { var t = 0; bumps.forEach(function (b) { if (b.side === k) t += b.pts; }); return t; }
+
+  /* humor do Danilão: reage ao que ESTE jogador faz (s.mood = love - hate recente, volta a zero com o tempo) */
   function moodLevel(n) { n = Math.abs(n); return n >= 70 ? 3 : (n >= 40 ? 2 : (n >= 15 ? 1 : 0)); }
   function applyMood() {
-    var net = s.good - s.bad, lv = moodLevel(net);
+    var net = s.mood, lv = moodLevel(net);
     ['l1', 'l2', 'l3', 'h1', 'h2', 'h3'].forEach(function (k) { cat.classList.remove(k); });
     for (var i = 1; i <= lv; i++) cat.classList.add((net > 0 ? 'l' : 'h') + i);
   }
   function renderTug() {
-    var net = Math.max(-WIN_AT, Math.min(WIN_AT, s.good - s.bad));
-    var pos = 50 + net / 2;
+    var love = G.love + unsent.love + pending('love'), hate = G.hate + unsent.hate + pending('hate');
+    var tot = love + hate;
+    var pos = tot ? Math.min(96, Math.max(4, 100 * love / tot)) : 50;
     $('#knot').style.left = pos + '%';
     $('.fb').style.width = pos + '%';
     $('.fr').style.width = (100 - pos) + '%';
-    $('#tugB').textContent = s.good;
-    $('#tugR').textContent = s.bad;
+    $('#tugB').textContent = fmt(love);
+    $('#tugR').textContent = fmt(hate);
+    $('#mine').textContent = 'Você: ' + s.good + ' Love · ' + s.bad + ' Hate';
   }
-  function showWin(good) {
-    var w = $('#win');
-    w.textContent = good ? 'O Love venceu!' : 'O Hate venceu!';
-    w.className = 'win ' + (good ? 'good' : 'bad');
-    w.hidden = false;
-    setTimeout(function () { w.hidden = true; }, 2400);
-    playReaction(good ? 'winLove' : 'winHate');
-  }
-  function score(side, pts) {
+  /* kind 'item': o servidor soma no placar ao cobrar; kind 'tap' (padrão): vai no próximo lote */
+  function score(side, pts, kind) {
     s[side] += pts;
-    var net = s.good - s.bad;
-    if (Math.abs(net) >= WIN_AT) { showWin(net > 0); s.good = 0; s.bad = 0; }
+    s.mood = Math.max(-100, Math.min(100, s.mood + (side === 'good' ? pts : -pts)));
+    var k = sideKey(side);
+    if (kind === 'item') bumps.push({ side: k, pts: pts, ts: Infinity, at: Date.now() }); else unsent[k] += pts;
     render();
   }
+  function unscore(side, pts) {
+    s[side] = Math.max(0, s[side] - pts);
+    s.mood = Math.max(-100, Math.min(100, s.mood - (side === 'good' ? pts : -pts)));
+    var k = sideKey(side);
+    for (var i = bumps.length - 1; i >= 0; i--) { if (bumps[i].side === k && bumps[i].pts === pts && bumps[i].ts === Infinity) { bumps.splice(i, 1); break; } }
+    render();
+  }
+  function flushTaps() {
+    var l = Math.min(unsent.love, 60), h = Math.min(unsent.hate, 60);
+    if (!l && !h) return;
+    unsent.love -= l; unsent.hate -= h;
+    api('/api/tap', { love: l, hate: h }).then(function (d) {
+      if (d.dropped) return render();                       /* o servidor recusou (limite de uso): some da tela */
+      if (l) bumps.push({ side: 'love', pts: l, ts: d.ts, at: Date.now() });
+      if (h) bumps.push({ side: 'hate', pts: h, ts: d.ts, at: Date.now() });
+      renderTug();
+    }).catch(function () { unsent.love += l; unsent.hate += h; });
+  }
+  function pollScore() {
+    var next = function () { setTimeout(pollScore, 5000 + Math.random() * 3000); };
+    if (document.hidden) return next();
+    api('/api/score').then(function (d) {
+      if (d.ts >= lastTs) {                                  /* ignora respostas mais antigas que a última recebida */
+        lastTs = d.ts; G.love = d.love || 0; G.hate = d.hate || 0;
+        var now = Date.now();
+        bumps = bumps.filter(function (b) { return b.ts > d.ts && now - b.at < 60000; });
+        renderTug();
+      }
+    }).catch(function () {}).then(next);
+  }
+  setInterval(flushTaps, 8000);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) flushTaps(); });
+  setInterval(function () { if (s.mood) { s.mood += s.mood > 0 ? -2 : 2; if (Math.abs(s.mood) < 2) s.mood = 0; applyMood(); } }, 5000);
+
   function render() {
     $('#credits').textContent = s.credits;
     renderTug();
@@ -361,13 +399,16 @@
     spending = true;
     var before = s.credits;
     s.credits -= it.cost;
-    score(it.side, it.cost);
+    score(it.side, it.cost, 'item');
     ACTIONS[it.id]();
     api('/api/use-item', { itemId: it.id }).then(function (d) {
-      s.credits = d.credits; render();
+      s.credits = d.credits;
+      for (var i = bumps.length - 1; i >= 0; i--) { if (bumps[i].ts === Infinity && bumps[i].side === sideKey(it.side) && bumps[i].pts === it.cost) { bumps[i].ts = d.ts; break; } }
+      if (d.recoveryCode) { recoveryCode = d.recoveryCode; renderShopNote(); }
+      render();
     }).catch(function (err) {
       s.credits = (err.data && typeof err.data.credits === 'number') ? err.data.credits : before;
-      s[it.side] = Math.max(0, s[it.side] - it.cost);
+      unscore(it.side, it.cost);
       stopSound(); render();
       if (err.status === 402) noCredits();
       else toast('Não consegui falar com o servidor. O item não foi cobrado.');
@@ -405,6 +446,7 @@
   function renderShopNote() {
     var n = 'Pagamento seguro pelo Stripe, com cartão ou Pix.';
     if (recoveryCode) n += ' Seu código de recuperação: ' + recoveryCode + ' (guarde para usar seus créditos em outro aparelho).';
+    else n += ' Seu código de recuperação aparece depois do primeiro item ou da primeira compra.';
     $('#shopNote').textContent = n;
   }
   function loadPacks() {
@@ -473,6 +515,7 @@
   renderItems();
   render();
   setTimeout(function () { say(A().noise + '! Love ou Hate? Você decide!', 3200); }, 500);
+  pollScore();
   loadPacks();
   loadMe().then(handleReturn);
 })();

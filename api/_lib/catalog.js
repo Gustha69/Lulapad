@@ -12,6 +12,9 @@ const ITEMS = {
   piggy: 5, stock: 15, finger: 30,     // Hate
 };
 
+// Lado do placar global de cada item.
+const SIDES = { star: 'love', beer: 'love', picanha: 'love', piggy: 'hate', stock: 'hate', finger: 'hate' };
+
 const brl = (cents) => 'R$ ' + (cents / 100).toFixed(2).replace('.', ',');
 
-module.exports = { PACKS, ITEMS, brl };
+module.exports = { PACKS, ITEMS, SIDES, brl };

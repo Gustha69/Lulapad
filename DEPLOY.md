@@ -12,6 +12,13 @@ e acrescente `?sslmode=require` no final. Essa URL é a `DATABASE_URL`.
 2. Copie a **Connection string** (`postgres://...?sslmode=require`). É o `DATABASE_URL`.
 As tabelas são criadas sozinhas na primeira requisição.
 
+## 1b. Placar global (Upstash Redis)
+O placar de Love e Hate de todos os jogadores fica num Redis, que aguenta milhares de somas por segundo.
+1. Crie conta em https://upstash.com e depois **Create Database** (Redis; região mais próxima do seu site, ex.: US East ou São Paulo se houver).
+2. Abra o banco, vá na aba **REST API** e copie **UPSTASH_REDIS_REST_URL** e **UPSTASH_REDIS_REST_TOKEN**.
+3. Cadastre as duas na Vercel (Settings > Environment Variables) e faça **Redeploy**.
+Atenção: o plano grátis do Upstash tem limite de comandos por mês; com muita gente, use o plano pago (pay-as-you-go, centavos por 100 mil comandos).
+
 ## 2. Stripe (modo teste primeiro)
 1. Crie conta em https://dashboard.stripe.com/register (não há mensalidade; só paga taxa por venda).
 2. Deixe o interruptor **Modo de teste** ligado. Em *Developers > API keys* copie a **Secret key** (`sk_test_...`).
@@ -58,3 +65,9 @@ As tabelas são criadas sozinhas na primeira requisição.
   cobrando de verdade, o plano Pro da Vercel é o adequado).
 - Stripe: sem mensalidade; taxa por transação (cartão com percentual + valor fixo, Pix com percentual menor).
   Confira os valores atuais em https://stripe.com/br/pricing. O valor fixo pesa muito no pacote de R$ 2,00.
+
+## Capacidade (leia antes de divulgar para muita gente)
+- Teste local (`loadtest/`, `node loadtest/simulate.js 10000 40`): 10.000 jogadores simultâneos no PIOR caso (sem cache da CDN),
+  0 erros e soma do placar exata. Isso valida o código, **não** a infraestrutura de produção.
+- Para aguentar milhares de pessoas é obrigatório: Upstash configurado, Vercel plano **Pro** (o Hobby é só para uso não comercial e tem limites)
+  e banco Supabase em plano acima do Nano. Faça um teste de carga real na sua URL antes de divulgar.

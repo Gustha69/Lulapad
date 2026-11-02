@@ -13,7 +13,7 @@ function getPool() {
       url = url.replace(/([?&])sslmode=[^&]*&?/, '$1').replace(/[?&]$/, '');
       ssl = { rejectUnauthorized: false };
     }
-    pool = new Pool({ connectionString: url, ssl, max: 1, idleTimeoutMillis: 10000 });
+    pool = new Pool({ connectionString: url, ssl, max: Number(process.env.DB_POOL_MAX) || 3, idleTimeoutMillis: 10000 });
   }
   return pool;
 }
@@ -32,6 +32,10 @@ CREATE TABLE IF NOT EXISTS ledger (
   reason     text NOT NULL,
   ref        text,
   created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS score (
+  side  text PRIMARY KEY,
+  total bigint NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS payments (
   stripe_session_id text PRIMARY KEY,

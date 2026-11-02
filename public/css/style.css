@@ -320,3 +320,6 @@ button:focus-visible, input:focus-visible { outline: 3px solid #fff; outline-off
 #cat .twinkle path { transform-box: fill-box; transform-origin: center; animation: twinkle 1.6s ease-in-out infinite; }
 #cat .twinkle path:nth-child(2) { animation-delay: .4s; } #cat .twinkle path:nth-child(3) { animation-delay: .8s; } #cat .twinkle path:nth-child(4) { animation-delay: 1.2s; }
 @keyframes twinkle { 0%,100% { transform: scale(.4); opacity: .3; } 50% { transform: scale(1); opacity: 1; } }
+
+.mine { text-align: center; font: 800 .72rem var(--body); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-dim); margin-top: -4px; }
+.tug .side { min-width: 3ch; }
