@@ -198,6 +198,21 @@
     playReaction('hat'); score('bad', 1);
   }
 
+  /* escala do palco: 1 unidade = 1px da arte original (1024 de largura) */
+  function setU() { stage.style.setProperty('--u', (stage.clientWidth / 1024) + 'px'); }
+  window.addEventListener('resize', setU);
+  setU();
+  /* um objeto sai da mão do Danilão, vai até a boca e volta (animações em CSS: drink, eat, chili) */
+  function handToMouth(key, w, cls, ms) {
+    var m = mouthEl().getBoundingClientRect(), r = stage.getBoundingClientRect();
+    var inner = cls === 'eat' ? '<div class="bite">' + ico(key, w) + '</div>' : ico(key, w);
+    var d = fxAt(inner, m.left - r.left + m.width / 2 - w / 2, m.top - r.top + m.height / 2 - w / 2, cls);
+    d.style.width = w + 'px';
+    setTimeout(function () { d.remove(); }, ms);
+    return d;
+  }
+  function sipping(on) { cat.classList.toggle('talking', on); }
+
   /* efeitos de itens */
   function dropToMouth(key, w, cb) {
     var m = mouthEl().getBoundingClientRect(), r = stage.getBoundingClientRect();
@@ -220,20 +235,26 @@
 
   var ACTIONS = {
     star: function () {
-      hearts(stage.clientWidth / 2, stage.clientHeight * .4, 5);
-      flash('happy', 2200); say('Essa estrela é a melhor!'); playReaction('star'); render();
+      var w = 150, x = stage.clientWidth / 2 - w / 2, y = stage.clientHeight * .16;
+      var d = fxAt(ico('star', w), x, y, 'starpop');
+      setTimeout(function () { d.remove(); }, 1700);
+      flash('happy', 2400); say('Essa estrela é a melhor!'); playReaction('star');
+      setTimeout(function () { hearts(stage.clientWidth / 2, stage.clientHeight * .4, 6); }, 700);
+      render();
     },
     beer: function () {
-      dropToMouth('beer', 44, function () {
-        chew(8); say('Ahh, geladinha!'); playReaction('beer');
-        hearts(stage.clientWidth / 2, stage.clientHeight * .4, 3); render();
-      });
+      handToMouth('beer', 54, 'drink', 3000);
+      say('Hora da gelada...'); playReaction('beer');
+      setTimeout(function () { sipping(true); }, 1150);
+      setTimeout(function () { sipping(false); say('Ahh, geladinha!'); flash('happy', 1800); hearts(stage.clientWidth / 2, stage.clientHeight * .4, 3); }, 2350);
+      render();
     },
     picanha: function () {
-      dropToMouth('picanha', 62, function () {
-        chew(11); flash('happy', 3200); say('Picanha! Hoje tem churrasco!'); playReaction('picanha');
-        hearts(stage.clientWidth / 2, stage.clientHeight * .4, 6); render();
-      });
+      handToMouth('picanha', 74, 'eat', 3800);
+      say('Olha essa picanha!'); playReaction('picanha');
+      setTimeout(function () { sipping(true); }, 1300);
+      setTimeout(function () { sipping(false); say('Picanha! Hoje tem churrasco!'); flash('happy', 2400); hearts(stage.clientWidth / 2, stage.clientHeight * .4, 6); }, 3200);
+      render();
     },
     pie: function () {
       var r = stage.getBoundingClientRect(), h = head().getBoundingClientRect();
@@ -249,16 +270,19 @@
     stock: function () {
       var d = fxAt(ico('stock', 70), stage.clientWidth * .5 - 35, 0, 'fall');
       setTimeout(function () { d.remove(); }, 2300);
-      setTimeout(function () { flash('surprise', 900); makeDizzy(2200); }, 1300);
+      setTimeout(function () { flash('surprise', 900); flash('hit', 500); makeDizzy(2200); }, 1300);
       say('Ih... a bolsa despencou!'); playReaction('stock'); render();
     },
     pepper: function () {
-      dropToMouth('pepper', 44, function () {
-        chew(2, function () { setMouth('open'); });
+      handToMouth('pepper', 46, 'chili', 2600);
+      say('Uma pimentinha...'); playReaction('pepper');
+      setTimeout(function () {
         cat.classList.add('hot'); clearTimeout(sickTimer);
-        sickTimer = setTimeout(function () { cat.classList.remove('hot'); }, 5500);
-        makeDizzy(3500); say('AAAH! Tá pegando fogo!'); playReaction('pepper'); render();
-      });
+        sickTimer = setTimeout(function () { cat.classList.remove('hot'); }, 5200);
+        sipping(true); makeDizzy(3500); say('AAAH! Tá pegando fogo!');
+      }, 1200);
+      setTimeout(function () { sipping(false); }, 2800);
+      render();
     }
   };
 

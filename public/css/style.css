@@ -229,3 +229,51 @@ button:focus-visible, input:focus-visible { outline: 3px solid #fff; outline-off
 @media (prefers-reduced-motion: reduce) { #cat .char { animation: none !important; } }
 .fall { animation: fall 2.2s cubic-bezier(.4,0,1,1) forwards; }
 @keyframes fall { 0% { transform: translateY(-20px) rotate(0); opacity: 1; } 60% { transform: translateY(240px) rotate(8deg); } 100% { transform: translateY(420px) rotate(-12deg); opacity: .2; } }
+
+/* animações dos itens: a mão do Danilão fica na mesa, perto de (+290, +520) da boca */
+.drink { animation: drink 3s ease-in-out forwards; z-index: 4; }
+.eat   { animation: eatmove 3.8s ease-in-out forwards; z-index: 4; }
+.chili { animation: chilimove 2.6s ease-in-out forwards; z-index: 4; }
+.bite  { animation: bite 3.8s steps(1, end) forwards; }
+.starpop { animation: starpop 1.7s ease-out forwards; z-index: 4; }
+@keyframes drink {
+  0% { transform: translate(calc(var(--u) * 290), calc(var(--u) * 520)) rotate(0); opacity: 0; }
+  8% { opacity: 1; }
+  30% { transform: translate(calc(var(--u) * 30), calc(var(--u) * 50)) rotate(0); }
+  40% { transform: translate(0, 0) rotate(-40deg); }
+  48% { transform: translate(0, 0) rotate(-48deg); } 56% { transform: translate(0, 0) rotate(-38deg); }
+  64% { transform: translate(0, 0) rotate(-48deg); } 72% { transform: translate(0, 0) rotate(-40deg); }
+  84% { transform: translate(calc(var(--u) * 30), calc(var(--u) * 50)) rotate(0); opacity: 1; }
+  100% { transform: translate(calc(var(--u) * 290), calc(var(--u) * 520)) rotate(0); opacity: 0; }
+}
+@keyframes eatmove {
+  0% { transform: translate(calc(var(--u) * 290), calc(var(--u) * 520)) rotate(0); opacity: 0; }
+  7% { opacity: 1; }
+  28% { transform: translate(calc(var(--u) * 25), calc(var(--u) * 20)) rotate(-8deg); }
+  40% { transform: translate(0, 0) rotate(-14deg); } 48% { transform: translate(calc(var(--u) * 14), 0) rotate(-6deg); }
+  56% { transform: translate(0, 0) rotate(-14deg); } 64% { transform: translate(calc(var(--u) * 14), 0) rotate(-6deg); }
+  72% { transform: translate(0, 0) rotate(-14deg); }
+  100% { transform: translate(0, 0) rotate(-14deg); opacity: 0; }
+}
+@keyframes bite {
+  0%, 38% { clip-path: inset(0 0 0 0); }
+  48% { clip-path: inset(0 0 0 22%); }
+  58% { clip-path: inset(0 0 0 45%); }
+  68% { clip-path: inset(0 0 0 70%); }
+  78%, 100% { clip-path: inset(0 0 0 100%); }
+}
+@keyframes chilimove {
+  0% { transform: translate(calc(var(--u) * 290), calc(var(--u) * 520)) rotate(0); opacity: 0; }
+  10% { opacity: 1; }
+  40% { transform: translate(0, 0) rotate(-20deg); }
+  50% { transform: translate(0, 0) rotate(-26deg); } 58% { transform: translate(0, 0) rotate(-16deg); }
+  70% { transform: translate(0, 0) rotate(-24deg); opacity: 1; }
+  100% { transform: translate(0, 0) rotate(-24deg) scale(.2); opacity: 0; }
+}
+@keyframes starpop {
+  0% { transform: scale(0) rotate(-200deg); opacity: 0; }
+  35% { transform: scale(1.35) rotate(10deg); opacity: 1; }
+  55% { transform: scale(1) rotate(0); }
+  80% { transform: scale(1.05) rotate(0); opacity: 1; }
+  100% { transform: scale(.2) translateY(-60px) rotate(120deg); opacity: 0; }
+}
