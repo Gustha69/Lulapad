@@ -18,3 +18,8 @@ REAÇÕES DISPONÍVEIS
   hat      mexer no chapéu            winLove / winHate     quando um lado vence
 
 Use só áudios que você criou ou tem licença para usar.
+
+JÁ CONFIGURADOS (voz do dono do projeto): star=estrela.mp3, beer=cerveja.mp3, picanha=picanha.mp3,
+piggy=moedinha.mp3, stock=bolsa.mp3, finger=dedinho.mp3 (em public/sounds/dan/).
+Ainda sem arquivo (usam som sintetizado): tap, poke, hat, winLove, winHate.
+Para trocar um áudio, substitua o arquivo mantendo o nome, ou mude o caminho em SOUNDS no app.js.

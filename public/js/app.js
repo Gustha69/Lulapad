@@ -81,20 +81,53 @@
      Reações: tap (carinho na cabeça), poke (cutucar a barriga), hat (mexer no chapéu),
      star, beer, picanha (itens Love), piggy, stock, finger (itens Hate),
      winLove, winHate (vitórias). O que não tiver arquivo usa o som sintetizado.
-     Exemplo:  dan: { piggy: 'sounds/dan/moeda.mp3', winLove: 'sounds/dan/ganhou.mp3' }
+     Exemplo:  dan: { piggy: 'sounds/dan/moedinha.mp3', winLove: 'sounds/dan/ganhou.mp3' }
      'all' vale para todos os personagens. Veja public/sounds/LEIA-ME.txt */
   var SOUNDS = {
     all: {},
-    dan: {}
+    dan: {
+      star: 'sounds/dan/estrela.mp3',
+      beer: 'sounds/dan/cerveja.mp3',
+      picanha: 'sounds/dan/picanha.mp3',
+      piggy: 'sounds/dan/moedinha.mp3',
+      stock: 'sounds/dan/bolsa.mp3',
+      finger: 'sounds/dan/dedinho.mp3'
+    }
   };
   var SYNTH_PITCH = { tap: 1.1, poke: 1.25, hat: .9, star: 1.2, beer: .9, picanha: 1.0, piggy: 1.5, stock: .7, finger: 1.3, winLove: 1.2, winHate: .6 };
+  var audioCache = {}, currentAudio = null, audioUnlocked = false;
+  function audioFor(url) {
+    if (!audioCache[url]) { var a = new Audio(url); a.preload = 'auto'; audioCache[url] = a; }
+    return audioCache[url];
+  }
+  function allSoundUrls() {
+    var out = [];
+    Object.keys(SOUNDS).forEach(function (g) { Object.keys(SOUNDS[g]).forEach(function (k) { out.push(SOUNDS[g][k]); }); });
+    return out;
+  }
+  /* celulares só liberam áudio depois de um toque: no primeiro toque "destravamos" todos os arquivos */
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    audioUnlocked = true;
+    allSoundUrls().forEach(function (u) {
+      var a = audioFor(u);
+      a.muted = true;
+      var pr = a.play();
+      if (pr && pr.then) pr.then(function () { a.pause(); a.currentTime = 0; a.muted = false; }).catch(function () { a.muted = false; });
+      else a.muted = false;
+    });
+  }
+  document.addEventListener('pointerdown', unlockAudio, { once: true });
   function playReaction(name) {
     if (muted) return;
     var url = (SOUNDS[CHAR.id] && SOUNDS[CHAR.id][name]) || (SOUNDS.all && SOUNDS.all[name]);
     if (url) {
       try {
-        var a = new Audio(url);
-        a.play().catch(function () { cry(SYNTH_PITCH[name] || 1); });
+        if (currentAudio) { currentAudio.pause(); }
+        var a = audioFor(url);
+        a.currentTime = 0; a.muted = false; currentAudio = a;
+        var pr = a.play();
+        if (pr && pr.catch) pr.catch(function () { cry(SYNTH_PITCH[name] || 1); });
         return;
       } catch (e) {}
     }

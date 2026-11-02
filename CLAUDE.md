@@ -14,7 +14,8 @@ reage aos **itens** que o jogador usa, gastando **créditos**. Créditos são co
 - **Humor visual:** com net = love - hate, a partir de 15, 40 e 70 pontos de diferença o Danilão fica mais feliz
   (bochechas, sorriso, olhos fechados de alegria) ou mais machucado (roxos, band-aid, olhos roxos, curativo no nariz).
   São camadas SVG em `public/index.html` (classes `lg1..lg3`, `hg1..hg3`) ligadas por `applyMood()` em `app.js`.
-- Sons: `SOUNDS` em `public/js/app.js` aponta um arquivo por reação (veja
+- Sons: áudios em `public/sounds/dan/` (voz do próprio dono do projeto): estrela, cerveja, picanha, moedinha
+  (cofrinho), bolsa e dedinho. `SOUNDS` em `public/js/app.js` aponta um arquivo por reação (veja
   `public/sounds/LEIA-ME.txt`); sem arquivo, usa o som sintetizado.
 
 ## Estrutura
