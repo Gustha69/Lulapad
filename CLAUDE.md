@@ -11,7 +11,7 @@ reage aos **itens** que o jogador usa, gastando **créditos**. Créditos são co
 - Itens **Hate (vermelho)**, todos em tom de comédia: Cofrinho 5, Queda da bolsa 15, Dedinho 30 (truque de mágica).
 - **Placar GLOBAL** (cabo de guerra): soma de TODOS os jogadores. **1 crédito gasto = 1 ponto** para o lado do item;
   toques grátis somam 1 e são enviados em lote (`/api/tap`, a cada 8 s). O total fica no Redis (`api/_lib/store.js`),
-  `/api/score` é lido a cada ~5-8 s com cache de CDN (`s-maxage=3`). Sem Upstash configurado, cai no Postgres (só dev).
+  `/api/score` é lido a cada ~10 s com cache de CDN (`s-maxage=3`). Sem Upstash configurado, cai no Postgres (só dev).
   A tela soma na hora os pontos do próprio jogador e os retira quando o total do servidor (`ts`) já os inclui.
   O humor do Danilão usa só o que ESTE jogador fez (`s.mood`, volta a zero com o tempo).
 - **Humor visual:** com net = love - hate, a partir de 15, 40 e 70 pontos de diferença o Danilão fica mais feliz

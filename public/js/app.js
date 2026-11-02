@@ -235,7 +235,7 @@
     }).catch(function () { unsent.love += l; unsent.hate += h; });
   }
   function pollScore() {
-    var next = function () { setTimeout(pollScore, 5000 + Math.random() * 3000); };
+    var next = function () { setTimeout(pollScore, 10000 + Math.random() * 1000); };
     if (document.hidden) return next();
     api('/api/score').then(function (d) {
       if (d.ts >= lastTs) {                                  /* ignora respostas mais antigas que a última recebida */
