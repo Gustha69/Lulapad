@@ -1,7 +1,7 @@
 # Danilão: Love vs Hate
 
 Jogo web de brincadeira, publicado como **link** (não é app). Um personagem de desenho, o **Danilão**
-(homem de terno azul e chapéu de palha; arte em `public/img/danilao.webp`, feita pelo dono do projeto),
+(homem de terno azul e chapéu de palha; arte em `public/img/danilao.webp`, feita pelo dono do projeto, com 5 dedos em cada mão),
 reage aos **itens** que o jogador usa, gastando **créditos**. Créditos são comprados com dinheiro real via **Stripe Checkout** (cartão e Pix).
 
 ## Mecânica
@@ -11,6 +11,9 @@ reage aos **itens** que o jogador usa, gastando **créditos**. Créditos são co
 - Itens **Hate (vermelho)**, todos em tom de comédia: Cofrinho 5, Queda da bolsa 15, Dedinho 30 (truque de mágica).
 - **Cabo de guerra** é o placar: **1 crédito gasto = 1 ponto** para o lado do item; toques grátis somam 1.
   Ao chegar a diferença de 100 aparece "O Love venceu!" / "O Hate venceu!" e zera.
+- **Humor visual:** com net = love - hate, a partir de 15, 40 e 70 pontos de diferença o Danilão fica mais feliz
+  (bochechas, sorriso, olhos fechados de alegria) ou mais machucado (roxos, band-aid, olhos roxos, curativo no nariz).
+  São camadas SVG em `public/index.html` (classes `lg1..lg3`, `hg1..hg3`) ligadas por `applyMood()` em `app.js`.
 - Sons: `SOUNDS` em `public/js/app.js` aponta um arquivo por reação (veja
   `public/sounds/LEIA-ME.txt`); sem arquivo, usa o som sintetizado.
 

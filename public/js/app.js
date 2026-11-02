@@ -131,6 +131,13 @@
   }
 
   /* cabo de guerra: azul à esquerda, vermelho à direita; a bandeira fica na fronteira entre os dois */
+  /* humor: net = love - hate. Quanto mais love, mais feliz; quanto mais hate, mais machucado */
+  function moodLevel(n) { n = Math.abs(n); return n >= 70 ? 3 : (n >= 40 ? 2 : (n >= 15 ? 1 : 0)); }
+  function applyMood() {
+    var net = s.good - s.bad, lv = moodLevel(net);
+    ['l1', 'l2', 'l3', 'h1', 'h2', 'h3'].forEach(function (k) { cat.classList.remove(k); });
+    for (var i = 1; i <= lv; i++) cat.classList.add((net > 0 ? 'l' : 'h') + i);
+  }
   function renderTug() {
     var net = Math.max(-WIN_AT, Math.min(WIN_AT, s.good - s.bad));
     var pos = 50 + net / 2;
@@ -157,6 +164,7 @@
   function render() {
     $('#credits').textContent = s.credits;
     renderTug();
+    applyMood();
     if (!busy) setMouth('smile');
     save();
   }

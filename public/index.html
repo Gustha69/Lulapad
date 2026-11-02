@@ -31,6 +31,52 @@
         <div class="char">
           <img class="art" src="img/danilao.webp" alt="Danilão, de terno azul e chapéu de palha" draggable="false">
           <svg class="fxlayer" viewBox="0 0 1024 1536" aria-hidden="true">
+            <defs><filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9"/></filter></defs>
+
+            <!-- FELIZ (Love à frente): bochechas, sorriso, olhos fechados de alegria -->
+            <g class="mood lg1">
+              <circle cx="345" cy="790" r="46" fill="#ff6f8e" opacity=".38" filter="url(#soft)"/>
+              <circle cx="675" cy="790" r="46" fill="#ff6f8e" opacity=".38" filter="url(#soft)"/>
+            </g>
+            <g class="mood lg2">
+              <circle cx="345" cy="790" r="52" fill="#ff5a80" opacity=".3" filter="url(#soft)"/>
+              <circle cx="675" cy="790" r="52" fill="#ff5a80" opacity=".3" filter="url(#soft)"/>
+              <path d="M440 812 Q510 880 580 812" stroke="#7a2020" stroke-width="12" fill="none" stroke-linecap="round"/>
+            </g>
+            <g class="mood lg3">
+              <path d="M425 800 Q510 930 595 800 Q510 826 425 800Z" fill="#7a1f1f" stroke="#5a1212" stroke-width="6" stroke-linejoin="round"/>
+              <path d="M450 806 Q510 828 570 806 L564 826 Q510 844 456 826Z" fill="#fff"/>
+              <ellipse cx="400" cy="654" rx="72" ry="70" fill="#fbb789"/>
+              <ellipse cx="625" cy="654" rx="72" ry="70" fill="#fbb789"/>
+              <path d="M335 674 Q400 596 465 674" stroke="#3a2418" stroke-width="16" fill="none" stroke-linecap="round"/>
+              <path d="M560 674 Q625 596 690 674" stroke="#3a2418" stroke-width="16" fill="none" stroke-linecap="round"/>
+              <g class="twinkle" fill="#fff6a8">
+                <path transform="translate(300 520) scale(1.6)" d="M0-14 L3.500-3.500 L14 0 L3.500 3.500 L0 14 L-3.500 3.500 L-14 0 L-3.500-3.500Z"/>
+                <path transform="translate(720 540) scale(1.3)" d="M0-14 L3.500-3.500 L14 0 L3.500 3.500 L0 14 L-3.500 3.500 L-14 0 L-3.500-3.500Z"/>
+                <path transform="translate(255 800) scale(1.1)" d="M0-14 L3.500-3.500 L14 0 L3.500 3.500 L0 14 L-3.500 3.500 L-14 0 L-3.500-3.500Z"/>
+                <path transform="translate(775 820) scale(1.4)" d="M0-14 L3.500-3.500 L14 0 L3.500 3.500 L0 14 L-3.500 3.500 L-14 0 L-3.500-3.500Z"/>
+              </g>
+            </g>
+
+            <!-- MACHUCADO (Hate à frente): roxos, band-aid, olhos roxos, curativo no nariz -->
+            <g class="mood hg1">
+              <ellipse cx="335" cy="815" rx="44" ry="30" fill="#6b3a9e" opacity=".6" filter="url(#soft)"/>
+              <path d="M690 780 L735 815 M700 765 L748 798" stroke="#c0392b" stroke-width="7" stroke-linecap="round" opacity=".85"/>
+            </g>
+            <g class="mood hg2">
+              <ellipse cx="625" cy="668" rx="82" ry="72" fill="#4a1d78" opacity=".6" filter="url(#soft)" style="mix-blend-mode:multiply"/>
+              <g transform="rotate(-24 360 770)"><rect x="312" y="752" width="96" height="36" rx="10" fill="#f2cf9c" stroke="#d9a96a" stroke-width="3"/><rect x="342" y="752" width="36" height="36" fill="#e7b97a" opacity=".6"/></g>
+              <path d="M455 870 Q510 835 565 870" stroke="#7a2e2e" stroke-width="12" fill="none" stroke-linecap="round" opacity="0"/>
+              <ellipse cx="510" cy="905" rx="46" ry="26" fill="#5b3294" opacity=".5" filter="url(#soft)"/>
+            </g>
+            <g class="mood hg3">
+              <ellipse cx="400" cy="668" rx="82" ry="72" fill="#4a1d78" opacity=".6" filter="url(#soft)" style="mix-blend-mode:multiply"/>
+              <ellipse cx="510" cy="740" rx="270" ry="215" fill="#6a2aa0" opacity=".2" style="mix-blend-mode:multiply"/>
+              <g transform="rotate(-12 510 722)"><rect x="440" y="700" width="140" height="40" rx="10" fill="#f6f2ea" stroke="#d6cfc2" stroke-width="3"/></g>
+              <g transform="rotate(48 510 722)"><rect x="440" y="704" width="130" height="34" rx="10" fill="#f6f2ea" stroke="#d6cfc2" stroke-width="3"/></g>
+              <path d="M675 660 l22 -26 M700 664 l22 -26" stroke="#c0392b" stroke-width="7" stroke-linecap="round"/>
+              <path d="M445 862 Q510 805 575 862" stroke="#5a1212" stroke-width="12" fill="none" stroke-linecap="round"/>
+            </g>
             <ellipse class="hotface" cx="510" cy="720" rx="250" ry="215" fill="#ff2a1a"/>
             <g class="cream">
               <path d="M270 590 Q510 500 750 590 Q790 760 720 860 Q700 940 650 900 Q620 980 580 900 Q540 990 500 900 Q460 960 420 890 Q380 930 350 860 Q250 770 270 590Z" fill="#fff8ee"/>

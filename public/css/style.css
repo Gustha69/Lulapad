@@ -311,3 +311,12 @@ button:focus-visible, input:focus-visible { outline: 3px solid #fff; outline-off
 @keyframes sparkle {
   0% { transform: scale(0) rotate(0); opacity: 0; } 40% { transform: scale(1.2) rotate(90deg); opacity: 1; } 100% { transform: scale(0) rotate(180deg); opacity: 0; }
 }
+
+/* humor do Danilão: quanto mais Love, mais feliz; quanto mais Hate, mais machucado */
+#cat .mood { opacity: 0; transition: opacity .45s; }
+#cat.l1 .lg1, #cat.l2 .lg1, #cat.l3 .lg1, #cat.l2 .lg2, #cat.l3 .lg2, #cat.l3 .lg3,
+#cat.h1 .hg1, #cat.h2 .hg1, #cat.h3 .hg1, #cat.h2 .hg2, #cat.h3 .hg2, #cat.h3 .hg3 { opacity: 1; }
+#cat.l3 .lg2 path { opacity: 0; }
+#cat .twinkle path { transform-box: fill-box; transform-origin: center; animation: twinkle 1.6s ease-in-out infinite; }
+#cat .twinkle path:nth-child(2) { animation-delay: .4s; } #cat .twinkle path:nth-child(3) { animation-delay: .8s; } #cat .twinkle path:nth-child(4) { animation-delay: 1.2s; }
+@keyframes twinkle { 0%,100% { transform: scale(.4); opacity: .3; } 50% { transform: scale(1); opacity: 1; } }
