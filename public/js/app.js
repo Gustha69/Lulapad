@@ -33,11 +33,10 @@
   var WIN_AT = 100;
 
   /* credits NÃO é salvo localmente: o saldo real mora no servidor */
-  var s = { hunger: 70, happy: 70, energy: 80, sleeping: false, credits: 0, animal: 'cat', good: 0, bad: 0 };
+  var s = { credits: 0, animal: 'cat', good: 0, bad: 0 };
   try {
     var saved = JSON.parse(localStorage.getItem(KEY) || 'null');
-    if (saved && typeof saved.hunger === 'number') {
-      s.hunger = saved.hunger; s.happy = saved.happy; s.energy = saved.energy;
+    if (saved) {
       if (typeof saved.good === 'number') s.good = saved.good;
       if (typeof saved.bad === 'number') s.bad = saved.bad;
     }
@@ -79,7 +78,34 @@
   function A() { return ANIMALS[s.animal]; }
   function ico(key, w) { return '<div style="width:' + w + 'px">' + ICON[key] + '</div>'; }
 
-  /* som do bichinho (sintetizado) */
+  /* ---------- SONS ----------
+     Para cada personagem e reação você pode apontar um arquivo de áudio em SOUNDS.
+     Reações: tap (carinho na cabeça), poke (cutucar), tail (puxar a cauda),
+     fish, furball, sardine (itens do bem), rotten, glove, poison (itens do mal),
+     winLove, winHate (vitórias). O que não tiver arquivo usa o som sintetizado.
+     Exemplo:  cat: { glove: 'sounds/cat/glove.mp3', winLove: 'sounds/cat/ganhou.mp3' }
+     'all' vale para todos os personagens. Veja public/sounds/LEIA-ME.txt */
+  var SOUNDS = {
+    all: {},
+    cat: {},
+    dog: {},
+    pig: {}
+  };
+  var SYNTH_PITCH = { tap: 1.1, poke: 1.25, tail: .9, fish: .8, furball: 1.2, sardine: .8, rotten: .7, glove: .6, poison: .6, winLove: 1.2, winHate: .6 };
+  function playReaction(name) {
+    if (muted) return;
+    var url = (SOUNDS[s.animal] && SOUNDS[s.animal][name]) || (SOUNDS.all && SOUNDS.all[name]);
+    if (url) {
+      try {
+        var a = new Audio(url);
+        a.play().catch(function () { cry(SYNTH_PITCH[name] || 1); });
+        return;
+      } catch (e) {}
+    }
+    cry(SYNTH_PITCH[name] || 1);
+  }
+
+  /* som sintetizado (reserva) */
   var ac;
   function cry(k) {
     if (muted) return;
@@ -113,9 +139,7 @@
   }
 
   function save() {
-    try {
-      localStorage.setItem(KEY, JSON.stringify({ hunger: s.hunger, happy: s.happy, energy: s.energy, good: s.good, bad: s.bad, animal: s.animal }));
-    } catch (e) {}
+    try { localStorage.setItem(KEY, JSON.stringify({ good: s.good, bad: s.bad, animal: s.animal })); } catch (e) {}
   }
 
   /* cabo de guerra: azul à esquerda, vermelho à direita; a bandeira fica na fronteira entre os dois */
@@ -134,7 +158,7 @@
     w.className = 'win ' + (good ? 'good' : 'bad');
     w.hidden = false;
     setTimeout(function () { w.hidden = true; }, 2400);
-    cry(good ? 1.2 : .6);
+    playReaction(good ? 'winLove' : 'winHate');
   }
   function score(side, pts) {
     s[side] += pts;
@@ -143,20 +167,9 @@
     render();
   }
   function render() {
-    [['hunger', s.hunger], ['happy', s.happy], ['energy', s.energy]].forEach(function (p) {
-      var i = $('#b-' + p[0] + ' i'), v = Math.round(p[1]);
-      i.style.width = v + '%';
-      i.className = v < 25 ? 'low' : (v < 50 ? 'mid' : '');
-      $('#v-' + p[0]).textContent = v;
-    });
     $('#credits').textContent = s.credits;
-    var low = Math.min(s.hunger, s.happy, s.energy) < 25;
-    cat.classList.toggle('sleep', s.sleeping);
-    cat.classList.toggle('sad', low && !s.sleeping);
-    stage.classList.toggle('night', s.sleeping);
     renderTug();
-    $('#sleep').textContent = s.sleeping ? 'Acordar' : 'Dormir';
-    if (!busy) setMouth(s.sleeping ? 'small' : (low ? 'frown' : 'smile'));
+    if (!busy) setMouth('smile');
     save();
   }
 
@@ -177,33 +190,28 @@
     }
   }
   function flash(cls, ms) { cat.classList.add(cls); setTimeout(function () { cat.classList.remove(cls); }, ms); }
-  function wake() { if (s.sleeping) { s.sleeping = false; say('Hmpf... eu estava dormindo!'); render(); return true; } return false; }
 
   /* toques gratuitos */
   function headTap(e) {
-    if (s.sleeping) { wake(); return; }
     var p = rel(e);
-    s.happy = clamp(s.happy + 6); score('good', 1);
+    score('good', 1);
     hearts(p[0], p[1], 3); flash('happy', 1300);
     say(pick(['Que delícia de carinho!', 'Mais um pouquinho, por favor.', 'Estou feliz!']));
-    if (Math.random() < .5) cry(1.1);
-    render();
+    playReaction('tap');
   }
   function poke() {
-    if (wake()) return;
     flash('surprise', 700);
     busy = true; setMouth('open');
     setTimeout(function () { busy = false; render(); }, 600);
     say(pick(['Hihi, faz cócegas!', 'Ei, a barriga não!', A().noise + '!']));
-    cry(1.25); s.happy = clamp(s.happy + 2); score('good', 1);
+    playReaction('poke'); score('good', 1);
   }
   function tailGrab() {
-    if (s.sleeping) return;
     var t = cat.querySelector('.t-' + s.animal);
     t.classList.add('wag');
     setTimeout(function () { t.classList.remove('wag'); }, 1200);
-    say('Ei! Essa é a minha cauda!'); cry(.9);
-    s.happy = clamp(s.happy - 3); score('bad', 1);
+    say('Ei! Essa é a minha cauda!'); playReaction('tail');
+    score('bad', 1);
   }
 
   /* efeitos de itens */
@@ -232,43 +240,37 @@
   var ACTIONS = {
     fish: function () {
       dropToMouth('fish', 50, function () {
-        chew(7); say('Nham nham nham!'); cry(.8);
-        s.hunger = clamp(s.hunger + 25); s.happy = clamp(s.happy + 4); render();
+        chew(7); say('Nham nham nham!'); playReaction('fish'); render();
       });
     },
     furball: function () {
       var r = stage.getBoundingClientRect();
       var d = fxAt(ico('furball', 34), r.width * .12, r.height * .66, 'ball');
       setTimeout(function () { d.remove(); }, 1750);
-      flash('happy', 2200); say('Hihi! Eu amo brincar!'); cry(1.2);
-      s.happy = clamp(s.happy + 14); s.energy = clamp(s.energy - 6); render();
+      flash('happy', 2200); say('Hihi! Eu amo brincar!'); playReaction('furball'); render();
     },
     sardine: function () {
       dropToMouth('sardine', 56, function () {
-        chew(9); say('Sardinha! Que luxo!'); cry(.8);
-        hearts(stage.clientWidth / 2, stage.clientHeight * .35, 4);
-        s.hunger = clamp(s.hunger + 40); s.happy = clamp(s.happy + 12); render();
+        chew(9); say('Sardinha! Que luxo!'); playReaction('sardine');
+        hearts(stage.clientWidth / 2, stage.clientHeight * .35, 4); render();
       });
     },
     rotten: function () {
       dropToMouth('rotten', 54, function () {
         chew(3, function () { setMouth('frown'); });
-        makeSick(4500, false); say('Eca! Que gosto horrível!'); cry(.7);
-        s.hunger = clamp(s.hunger + 5); s.happy = clamp(s.happy - 10); s.energy = clamp(s.energy - 6); render();
+        makeSick(4500, false); say('Eca! Que gosto horrível!'); playReaction('rotten'); render();
       });
     },
     glove: function () {
       var r = stage.getBoundingClientRect(), h = head().getBoundingClientRect();
       var d = fxAt('<div style="transform:rotate(-90deg)">' + ico('glove', 64) + '</div>', h.left - r.left + h.width * .72, h.top - r.top + h.height * .3, 'punch');
-      setTimeout(function () { flash('hit', 500); flash('surprise', 700); makeDizzy(2600); cry(.6); say('Aaai! Meu focinho!'); }, 320);
-      setTimeout(function () { d.remove(); }, 800);
-      s.happy = clamp(s.happy - 14); render();
+      setTimeout(function () { flash('hit', 500); flash('surprise', 700); makeDizzy(2600); playReaction('glove'); say('Aaai! Meu focinho!'); }, 320);
+      setTimeout(function () { d.remove(); }, 800); render();
     },
     poison: function () {
       dropToMouth('poison', 44, function () {
         chew(2, function () { setMouth('frown'); });
-        makeSick(6500, true); say('Ai... minha barriguinha...'); cry(.6);
-        s.hunger = clamp(s.hunger - 5); s.happy = clamp(s.happy - 18); s.energy = clamp(s.energy - 15); render();
+        makeSick(6500, true); say('Ai... minha barriguinha...'); playReaction('poison'); render();
       });
     }
   };
@@ -283,7 +285,6 @@
     spending = true;
     api('/api/use-item', { itemId: it.id }).then(function (d) {
       s.credits = d.credits;
-      if (s.sleeping) { s.sleeping = false; }
       score(it.side, it.cost);
       ACTIONS[it.id]();
     }).catch(function (err) {
@@ -336,8 +337,9 @@
     btn.disabled = true; toast('Abrindo o pagamento...');
     api('/api/checkout', { packId: p.id }).then(function (d) {
       window.location.href = d.url;
-    }).catch(function () {
-      btn.disabled = false; toast('Não foi possível abrir o pagamento. Tente de novo.');
+    }).catch(function (err) {
+      btn.disabled = false;
+      toast('Pagamento indisponível: ' + ((err.data && err.data.detail) || 'tente de novo') );
     });
   }
   function recover() {
@@ -370,30 +372,6 @@
     }
   }
 
-  /* fala */
-  function talk(text) {
-    wake();
-    busy = true; cat.classList.add('talking');
-    var iv = setInterval(function () { setMouth(Math.random() > .4 ? 'open' : 'small'); }, 130);
-    var finished = false;
-    var done = function () { if (finished) return; finished = true; clearInterval(iv); cat.classList.remove('talking'); busy = false; render(); };
-    say(text, Math.max(2600, text.length * 90));
-    var synth = window.speechSynthesis;
-    if (synth && window.SpeechSynthesisUtterance) {
-      try {
-        synth.cancel();
-        var u = new SpeechSynthesisUtterance(text);
-        u.lang = 'pt-BR'; u.pitch = A().pitch; u.rate = A().rate;
-        u.onend = done; u.onerror = done;
-        synth.speak(u);
-        setTimeout(done, 12000);
-        s.happy = clamp(s.happy + 4); render();
-        return;
-      } catch (e) {}
-    }
-    cry(1); setTimeout(done, 1200);
-  }
-
   /* telas */
   function show(id) {
     ['animal', 'game'].forEach(function (n) { $('#screen-' + n).hidden = (n !== id); });
@@ -421,8 +399,7 @@
     s.animal = a; cat.setAttribute('data-animal', a);
     $('#petName').firstChild.nodeValue = ANIMALS[a].name;
     $('#petKind').textContent = ANIMALS[a].pt + ' de terno';
-    s.sleeping = false;
-    cat.classList.remove('sick', 'dizzy', 'sleep');
+    cat.classList.remove('sick', 'dizzy');
     renderItems(); render(); show('game');
     setTimeout(function () { say(A().noise + '! O que você vai fazer comigo?', 3200); }, 400);
   }
@@ -432,17 +409,8 @@
   $('#shopClose').addEventListener('click', closeShop);
   $('#recoverBtn').addEventListener('click', recover);
   $('#shop').addEventListener('click', function (e) { if (e.target === this) closeShop(); });
-  $('#sleep').addEventListener('click', function () {
-    s.sleeping = !s.sleeping; say(s.sleeping ? 'Boa noite... zzz' : 'Bom dia!'); render();
-  });
   $('#mute').addEventListener('click', function () {
     muted = !muted; this.textContent = muted ? 'Mudo' : 'Som'; this.setAttribute('aria-pressed', String(muted));
-  });
-  $('#talkForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    var inp = $('#talkInput'), t = inp.value.trim();
-    if (!t) { say('Digite alguma coisa para eu repetir!'); return; }
-    inp.value = ''; talk(t);
   });
   cat.addEventListener('pointerdown', function (e) {
     var t = e.target;
@@ -453,25 +421,12 @@
 
   /* olhos seguem o dedo */
   document.addEventListener('pointermove', function (e) {
-    if (s.sleeping || $('#screen-game').hidden) return;
+    if ($('#screen-game').hidden) return;
     var h = head().getBoundingClientRect();
     var dx = e.clientX - (h.left + h.width / 2), dy = e.clientY - (h.top + h.height / 2);
     var len = Math.hypot(dx, dy) || 1, k = Math.min(1, len / 160) * 4;
     head().querySelectorAll('.pupil').forEach(function (p) { p.setAttribute('transform', 'translate(' + (dx / len * k).toFixed(1) + ' ' + (dy / len * k).toFixed(1) + ')'); });
   });
-
-  /* o tempo passa */
-  setInterval(function () {
-    if ($('#screen-game').hidden) return;
-    if (s.sleeping) { s.energy = clamp(s.energy + 4); s.hunger = clamp(s.hunger - .4); }
-    else { s.hunger = clamp(s.hunger - 1.2); s.happy = clamp(s.happy - .8); s.energy = clamp(s.energy - .6); }
-    if (!s.sleeping && !busy && !bubble.classList.contains('show')) {
-      if (s.hunger < 25) { say(A().noise + '... estou com fome.'); cry(1); }
-      else if (s.energy < 20) { say('Estou com sono...'); }
-      else if (s.happy < 25) { say('Preciso de carinho.'); }
-    }
-    render();
-  }, 3000);
 
   buildAnimalCards();
   render();

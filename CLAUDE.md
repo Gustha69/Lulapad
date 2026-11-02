@@ -5,12 +5,14 @@ Jogo de pet virtual animado, publicado como **link web** (não é app). O jogado
 que custam **créditos**. Créditos são comprados com dinheiro real via **Stripe Checkout** (cartão e Pix).
 
 ## Mecânica
-- Estados do bicho: fome, humor, energia (0-100), caem com o tempo; tocar na cabeça/barriga/cauda é grátis.
+- Foco do jogo: a disputa **Love vs Hate**. Não existem mais fome, humor, energia, sono nem fala.
+  Tocar na cabeça/barriga (+1 love) e na cauda (+1 hate) é grátis.
 - Itens **do bem (azul)**: Peixe 5, Bolinha de pelos 10, Lata de sardinha 20.
 - Itens **do mal (vermelho)**: Peixe podre 5, Luva de boxe 15, Veneno 30.
 - **Cabo de guerra** é o placar: cada item soma pontos iguais ao custo para seu lado; toques grátis somam 1.
   Ao chegar a diferença de 100 aparece "O amor venceu!" / "O ódio venceu!" e zera.
-- Fala: o bicho repete o texto digitado (Web Speech API, pt-BR).
+- Sons: `SOUNDS` em `public/js/app.js` aponta um arquivo por personagem e reação (veja
+  `public/sounds/LEIA-ME.txt`); sem arquivo, usa o som sintetizado.
 
 ## Estrutura
 ```
