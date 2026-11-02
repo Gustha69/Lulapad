@@ -85,6 +85,10 @@
   var SOUNDS = {
     all: {},
     dan: {
+      chapeu: 'sounds/dan/chapeu.mp3',
+      esposa: 'sounds/dan/esposa.mp3',
+      delicia: 'sounds/dan/delicia.mp3',
+      papai: 'sounds/dan/carinho.mp3',
       star: 'sounds/dan/estrela.mp3',
       beer: 'sounds/dan/cerveja.mp3',
       picanha: 'sounds/dan/picanha.mp3',
@@ -93,7 +97,7 @@
       finger: 'sounds/dan/dedinho.mp3'
     }
   };
-  var SYNTH_PITCH = { tap: 1.1, poke: 1.25, hat: .9, star: 1.2, beer: .9, picanha: 1.0, piggy: 1.5, stock: .7, finger: 1.3, winLove: 1.2, winHate: .6 };
+  var SYNTH_PITCH = { chapeu: .9, esposa: 1.4, delicia: 1.3, papai: 1.1, tap: 1.1, poke: 1.25, hat: .9, star: 1.2, beer: .9, picanha: 1.0, piggy: 1.5, stock: .7, finger: 1.3, winLove: 1.2, winHate: .6 };
   /* Áudio: os sons são carregados na memória (Web Audio) e liberados no primeiro toque do usuário.
      Assim funcionam no iPhone/iPad, mesmo quando tocam depois de uma chamada ao servidor. */
   var actx = null, buffers = {}, currentSrc = null, audioReady = false;
@@ -287,11 +291,23 @@
     say(pick(['Hihi, faz cócegas!', 'Ei, a barriga não!', A().noise + '!']));
     playReaction('poke'); score('good', 1);
   }
-  function hatTap() {
+  /* botões gratuitos: a cada clique o som alterna entre os dois da dupla */
+  var xCount = 0, okCount = 0;
+  function xTap() {
+    var name = (xCount++ % 2) ? 'esposa' : 'chapeu';
     flash('hatpop', 700);
-    say(pick(['Ei, meu chapéu!', 'Devolve o chapéu!', 'Respeita o chapéu!']));
-    playReaction('hat'); score('bad', 1);
+    say(name === 'chapeu' ? pick(['Ei, meu chapéu!', 'Devolve o chapéu!']) : pick(['Ei, aí não!', 'Sua esposa tá de olho!']));
+    playReaction(name); score('bad', 1);
   }
+  function okTap() {
+    var name = (okCount++ % 2) ? 'papai' : 'delicia';
+    flash('happy', 1300);
+    say(name === 'delicia' ? pick(['Que delícia!', 'Hmm, delícia!']) : pick(['Isso aí, papai!', 'Valeu, papai!']));
+    playReaction(name); score('good', 1);
+  }
+  function hatTap() { xTap(); }
+  $('#btnX').addEventListener('click', function (e) { e.stopPropagation(); xTap(); });
+  $('#btnOk').addEventListener('click', function (e) { e.stopPropagation(); okTap(); });
 
   /* escala do palco: 1 unidade = 1px da arte original (1024 de largura) */
   function setU() { stage.style.setProperty('--u', (stage.clientWidth / 1024) + 'px'); }

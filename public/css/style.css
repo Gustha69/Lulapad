@@ -323,3 +323,10 @@ button:focus-visible, input:focus-visible { outline: 3px solid #fff; outline-off
 
 .mine { text-align: center; font: 800 .72rem var(--body); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-dim); margin-top: -4px; }
 .tug .side { min-width: 3ch; }
+
+/* botões gratuitos: X (vermelho, à esquerda do Danilão) e check (verde, à direita) */
+#stage .free { position: absolute; top: 50%; z-index: 6; width: 54px; height: 54px; margin-top: -27px; border: 0; border-radius: 50%; cursor: pointer; display: grid; place-items: center; box-shadow: 0 4px 0 rgba(0,0,0,.3); padding: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+#stage .free svg { width: 60%; height: 60%; display: block; }
+#stage .fx-x { left: 8px; background: var(--bad); }
+#stage .fx-ok { right: 8px; background: var(--good); }
+#stage .free:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,.3); }
