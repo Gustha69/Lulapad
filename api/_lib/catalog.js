@@ -8,8 +8,8 @@ const PACKS = [
 
 // Custo em créditos de cada item (igual ao exibido no front).
 const ITEMS = {
-  fish: 5, furball: 10, sardine: 20,
-  rotten: 5, glove: 15, poison: 30,
+  flower: 5, cake: 10, gift: 20,      // Love
+  pie: 5, mosquito: 15, pepper: 30,   // Hate
 };
 
 const brl = (cents) => 'R$ ' + (cents / 100).toFixed(2).replace('.', ',');

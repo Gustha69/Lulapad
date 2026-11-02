@@ -3,37 +3,33 @@
   var cat = $('#cat'), bubble = $('#bubble'), stage = $('#stage');
   var KEY = 'bicho-terno-v2';
 
-  var ANIMALS = {
-    cat: { en: 'cat', pt: 'gato', name: 'Bigodes', noise: 'Miau', pitch: 2, rate: 1.15 },
-    dog: { en: 'dog', pt: 'cachorro', name: 'Totó', noise: 'Au au', pitch: 1.35, rate: 1.1 },
-    pig: { en: 'pig', pt: 'porco', name: 'Toicinho', noise: 'Oinc', pitch: .8, rate: 1.05 }
-  };
+  var CHAR = { id: 'dan', name: 'Danilão', noise: 'Ôpa' };
   /* pacotes vêm do servidor (GET /api/packs): preço e créditos são definidos lá */
   var PACKS = [];
 
   var ICON = {
-    fish: '<svg viewBox="0 0 54 30"><path d="M4 15 C14 2 34 2 42 15 C34 28 14 28 4 15Z" fill="#7fb7d6"/><path d="M40 15 L52 5 L52 25Z" fill="#5b97bb"/><circle cx="14" cy="12" r="2.200" fill="#1a1a24"/></svg>',
-    furball: '<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="15" fill="#b8b2a6"/><path d="M7 18 Q20 5 33 18 M7 24 Q20 37 33 22 M12 11 Q23 22 31 29" stroke="#8c867a" stroke-width="2" fill="none"/></svg>',
-    sardine: '<svg viewBox="0 0 44 40"><rect x="4" y="12" width="36" height="22" rx="4" fill="#c9ced6"/><ellipse cx="22" cy="14" rx="18" ry="6" fill="#e8ebf0"/><path d="M10 14 Q22 8 34 14 Q22 20 10 14Z" fill="#6c8fb3"/><path d="M34 14 L40 10 L40 18Z" fill="#6c8fb3"/><rect x="4" y="25" width="36" height="6" fill="#e4572e"/></svg>',
-    rotten: '<svg viewBox="0 0 54 40"><path d="M4 24 C14 11 34 11 42 24 C34 37 14 37 4 24Z" fill="#8aa05a"/><path d="M40 24 L52 14 L52 34Z" fill="#6e8447"/><path d="M10 20 l5 5 m0-5 l-5 5" stroke="#2a2a1e" stroke-width="2"/><path d="M18 9 q-4-3 0-6 M28 9 q-4-3 0-6 M38 9 q-4-3 0-6" stroke="#7fa13a" stroke-width="2" fill="none"/></svg>',
-    poison: '<svg viewBox="0 0 40 48"><rect x="14" y="2" width="12" height="8" rx="2" fill="#6b4a2f"/><path d="M14 10 H26 V16 C34 20 36 26 36 34 C36 42 30 46 20 46 C10 46 4 42 4 34 C4 26 6 20 14 16Z" fill="#6fcf4a"/><circle cx="20" cy="30" r="7" fill="#f3efe6"/><circle cx="17" cy="29" r="1.800" fill="#1a1a24"/><circle cx="23" cy="29" r="1.800" fill="#1a1a24"/><path d="M17 35 h6" stroke="#1a1a24" stroke-width="1.500"/></svg>',
-    glove: '<svg viewBox="0 0 44 44"><path d="M10 14 C10 6 20 4 28 6 C38 8 40 18 36 26 L34 36 H16 L14 28 C10 24 10 18 10 14Z" fill="#d9362b"/><rect x="14" y="34" width="22" height="8" rx="2" fill="#f3efe6"/><path d="M14 18 C20 22 26 22 32 18" stroke="#a82219" stroke-width="2" fill="none"/></svg>',
+    flower: '<svg viewBox="0 0 40 44"><rect x="18" y="20" width="4" height="22" rx="2" fill="#4caf50"/><path d="M20 32 Q10 28 8 22 Q16 22 20 30Z" fill="#4caf50"/><g fill="#ff7eb6"><circle cx="20" cy="9" r="7"/><circle cx="30" cy="16" r="7"/><circle cx="10" cy="16" r="7"/><circle cx="26" cy="6" r="6"/><circle cx="14" cy="6" r="6"/></g><circle cx="20" cy="14" r="6" fill="#ffd54a"/></svg>',
+    cake: '<svg viewBox="0 0 44 40"><path d="M4 34 L8 14 Q22 8 40 14 L40 34Z" fill="#f4d9a6"/><path d="M4 18 Q22 6 40 18 L40 24 Q34 20 28 25 Q22 20 16 25 Q10 20 4 24Z" fill="#fff4e6"/><path d="M4 30 H40" stroke="#c0392b" stroke-width="3"/><circle cx="22" cy="10" r="5" fill="#d6304a"/><rect x="21" y="2" width="2" height="5" fill="#6b4a2f"/></svg>',
+    gift: '<svg viewBox="0 0 44 44"><rect x="6" y="18" width="32" height="22" rx="3" fill="#ef5d5d"/><rect x="4" y="12" width="36" height="9" rx="3" fill="#ff8a8a"/><rect x="19" y="12" width="6" height="28" fill="#ffd54a"/><path d="M22 12 Q10 0 12 8 Q14 14 22 12 Q30 14 32 8 Q34 0 22 12Z" fill="#ffd54a"/></svg>',
+    pie: '<svg viewBox="0 0 48 40"><ellipse cx="24" cy="32" rx="22" ry="6" fill="#e8e1d2"/><path d="M6 30 Q8 14 24 12 Q40 14 42 30Z" fill="#fff8ee"/><path d="M12 22 Q18 16 24 20 Q30 14 36 22" stroke="#e8dcc6" stroke-width="2" fill="none"/><circle cx="24" cy="10" r="5" fill="#d6304a"/></svg>',
+    mosquito: '<svg viewBox="0 0 48 40"><ellipse cx="14" cy="12" rx="12" ry="6" fill="#cfe8f5" opacity=".85" transform="rotate(-25 14 12)"/><ellipse cx="30" cy="10" rx="12" ry="6" fill="#cfe8f5" opacity=".85" transform="rotate(20 30 10)"/><ellipse cx="22" cy="24" rx="10" ry="5" fill="#2a2a33"/><circle cx="33" cy="24" r="5" fill="#2a2a33"/><path d="M38 26 L46 32" stroke="#2a2a33" stroke-width="2" stroke-linecap="round"/><path d="M14 28 L8 36 M20 29 L18 38 M26 29 L28 38" stroke="#2a2a33" stroke-width="1.500"/></svg>',
+    pepper: '<svg viewBox="0 0 44 44"><path d="M12 12 Q4 24 12 36 Q18 42 32 38 Q40 34 36 24 Q30 30 24 26 Q20 20 20 12Z" fill="#e53935"/><path d="M12 12 Q16 6 22 8 L20 14Z" fill="#43a047"/><path d="M10 14 Q8 6 16 4" stroke="#43a047" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
     heart: '<svg viewBox="0 0 24 24"><path d="M12 21s-8-5.6-8-11.2C4 6.600 6.400 5 8.600 5c1.500 0 2.800.8 3.400 2 .6-1.200 1.900-2 3.400-2C17.600 5 20 6.600 20 9.800 20 15.400 12 21 12 21z" fill="#ef4f6b"/></svg>'
   };
   /* side: good = azul (bem), bad = vermelho (mal). Os pontos no cabo de guerra são iguais ao custo.
      ATENÇÃO: o custo que vale é o do servidor (api/_lib/catalog.js). Aqui é só para exibir. */
   var ITEMS = [
-    { id: 'fish', name: 'Peixe', cost: 5, side: 'good' },
-    { id: 'furball', name: 'Bolinha de pelos', cost: 10, side: 'good' },
-    { id: 'sardine', name: 'Lata de sardinha', cost: 20, side: 'good' },
-    { id: 'rotten', name: 'Peixe podre', cost: 5, side: 'bad' },
-    { id: 'glove', name: 'Luva de boxe', cost: 15, side: 'bad' },
-    { id: 'poison', name: 'Veneno', cost: 30, side: 'bad' }
+    { id: 'flower', name: 'Flor', cost: 5, side: 'good' },
+    { id: 'cake', name: 'Bolo', cost: 10, side: 'good' },
+    { id: 'gift', name: 'Presente', cost: 20, side: 'good' },
+    { id: 'pie', name: 'Torta na cara', cost: 5, side: 'bad' },
+    { id: 'mosquito', name: 'Mosquito', cost: 15, side: 'bad' },
+    { id: 'pepper', name: 'Pimenta', cost: 30, side: 'bad' }
   ];
   var WIN_AT = 100;
 
   /* credits NÃO é salvo localmente: o saldo real mora no servidor */
-  var s = { credits: 0, animal: 'cat', good: 0, bad: 0 };
+  var s = { credits: 0, good: 0, bad: 0 };
   try {
     var saved = JSON.parse(localStorage.getItem(KEY) || 'null');
     if (saved) {
@@ -70,31 +66,29 @@
     small: ['M142 157 Q150 172 158 157 Z', '#6b2a35'],
     chew: ['M138 158 Q150 176 162 158 Z', '#6b2a35']
   };
-  function head() { return cat.querySelector('.h-' + s.animal); }
-  function mouthEl() { return head().querySelector('.mouth'); }
-  function setMouth(k) { var m = mouthEl(); m.setAttribute('d', MOUTH[k][0]); m.setAttribute('fill', MOUTH[k][1]); }
+  function head() { return $('#face'); }
+  function mouthEl() { return $('#mouthPt'); }
+  function setMouth() { /* a boca faz parte da ilustração */ }
   function clamp(n) { return Math.max(0, Math.min(100, n)); }
   function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
-  function A() { return ANIMALS[s.animal]; }
+  function A() { return CHAR; }
   function ico(key, w) { return '<div style="width:' + w + 'px">' + ICON[key] + '</div>'; }
 
   /* ---------- SONS ----------
      Para cada personagem e reação você pode apontar um arquivo de áudio em SOUNDS.
-     Reações: tap (carinho na cabeça), poke (cutucar), tail (puxar a cauda),
-     fish, furball, sardine (itens do bem), rotten, glove, poison (itens do mal),
+     Reações: tap (carinho na cabeça), poke (cutucar a barriga), hat (mexer no chapéu),
+     flower, cake, gift (itens Love), pie, mosquito, pepper (itens Hate),
      winLove, winHate (vitórias). O que não tiver arquivo usa o som sintetizado.
-     Exemplo:  cat: { glove: 'sounds/cat/glove.mp3', winLove: 'sounds/cat/ganhou.mp3' }
+     Exemplo:  dan: { pie: 'sounds/dan/torta.mp3', winLove: 'sounds/dan/ganhou.mp3' }
      'all' vale para todos os personagens. Veja public/sounds/LEIA-ME.txt */
   var SOUNDS = {
     all: {},
-    cat: {},
-    dog: {},
-    pig: {}
+    dan: {}
   };
-  var SYNTH_PITCH = { tap: 1.1, poke: 1.25, tail: .9, fish: .8, furball: 1.2, sardine: .8, rotten: .7, glove: .6, poison: .6, winLove: 1.2, winHate: .6 };
+  var SYNTH_PITCH = { tap: 1.1, poke: 1.25, hat: .9, flower: 1.2, cake: .9, gift: 1.3, pie: .6, mosquito: 1.5, pepper: .7, winLove: 1.2, winHate: .6 };
   function playReaction(name) {
     if (muted) return;
-    var url = (SOUNDS[s.animal] && SOUNDS[s.animal][name]) || (SOUNDS.all && SOUNDS.all[name]);
+    var url = (SOUNDS[CHAR.id] && SOUNDS[CHAR.id][name]) || (SOUNDS.all && SOUNDS.all[name]);
     if (url) {
       try {
         var a = new Audio(url);
@@ -113,16 +107,8 @@
       ac = ac || new (window.AudioContext || window.webkitAudioContext)();
       var t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain(), f = ac.createBiquadFilter(), dur;
       k = k || 1; f.type = 'lowpass'; f.frequency.value = 1500;
-      if (s.animal === 'cat') {
-        o.type = 'sawtooth'; dur = .55;
-        o.frequency.setValueAtTime(420 * k, t); o.frequency.linearRampToValueAtTime(840 * k, t + .18); o.frequency.linearRampToValueAtTime(380 * k, t + dur - .05);
-      } else if (s.animal === 'dog') {
-        o.type = 'square'; dur = .22;
-        o.frequency.setValueAtTime(320 * k, t); o.frequency.exponentialRampToValueAtTime(130 * k, t + dur - .04);
-      } else {
-        o.type = 'sawtooth'; dur = .4;
-        o.frequency.setValueAtTime(190 * k, t); o.frequency.linearRampToValueAtTime(110 * k, t + .15); o.frequency.linearRampToValueAtTime(170 * k, t + .25); o.frequency.linearRampToValueAtTime(100 * k, t + dur - .05);
-      }
+      o.type = 'sawtooth'; dur = .4;
+      o.frequency.setValueAtTime(190 * k, t); o.frequency.linearRampToValueAtTime(260 * k, t + .15); o.frequency.linearRampToValueAtTime(150 * k, t + dur - .05);
       g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.12, t + .04); g.gain.linearRampToValueAtTime(0, t + dur);
       o.connect(f); f.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + dur + .05);
     } catch (e) {}
@@ -139,7 +125,7 @@
   }
 
   function save() {
-    try { localStorage.setItem(KEY, JSON.stringify({ good: s.good, bad: s.bad, animal: s.animal })); } catch (e) {}
+    try { localStorage.setItem(KEY, JSON.stringify({ good: s.good, bad: s.bad })); } catch (e) {}
   }
 
   /* cabo de guerra: azul à esquerda, vermelho à direita; a bandeira fica na fronteira entre os dois */
@@ -154,7 +140,7 @@
   }
   function showWin(good) {
     var w = $('#win');
-    w.textContent = good ? 'O amor venceu!' : 'O ódio venceu!';
+    w.textContent = good ? 'O Love venceu!' : 'O Hate venceu!';
     w.className = 'win ' + (good ? 'good' : 'bad');
     w.hidden = false;
     setTimeout(function () { w.hidden = true; }, 2400);
@@ -196,7 +182,7 @@
     var p = rel(e);
     score('good', 1);
     hearts(p[0], p[1], 3); flash('happy', 1300);
-    say(pick(['Que delícia de carinho!', 'Mais um pouquinho, por favor.', 'Estou feliz!']));
+    say(pick(['Que carinho bom!', 'Hehe, assim eu gosto!', 'Estou feliz!']));
     playReaction('tap');
   }
   function poke() {
@@ -206,12 +192,10 @@
     say(pick(['Hihi, faz cócegas!', 'Ei, a barriga não!', A().noise + '!']));
     playReaction('poke'); score('good', 1);
   }
-  function tailGrab() {
-    var t = cat.querySelector('.t-' + s.animal);
-    t.classList.add('wag');
-    setTimeout(function () { t.classList.remove('wag'); }, 1200);
-    say('Ei! Essa é a minha cauda!'); playReaction('tail');
-    score('bad', 1);
+  function hatTap() {
+    flash('hatpop', 700);
+    say(pick(['Ei, meu chapéu!', 'Devolve o chapéu!', 'Respeita o chapéu!']));
+    playReaction('hat'); score('bad', 1);
   }
 
   /* efeitos de itens */
@@ -221,11 +205,8 @@
     setTimeout(function () { d.remove(); cb(); }, 720);
   }
   function chew(times, done) {
-    busy = true; var n = 0;
-    var iv = setInterval(function () {
-      setMouth(n % 2 ? 'chew' : 'small'); n++;
-      if (n > times) { clearInterval(iv); busy = false; if (done) done(); render(); }
-    }, 150);
+    busy = true; cat.classList.add('talking');
+    setTimeout(function () { cat.classList.remove('talking'); busy = false; if (done) done(); render(); }, (times + 1) * 150);
   }
   function makeSick(ms, dizzy) {
     cat.classList.add('sick'); clearTimeout(sickTimer);
@@ -238,39 +219,48 @@
   }
 
   var ACTIONS = {
-    fish: function () {
-      dropToMouth('fish', 50, function () {
-        chew(7); say('Nham nham nham!'); playReaction('fish'); render();
+    flower: function () {
+      hearts(stage.clientWidth / 2, stage.clientHeight * .35, 5);
+      flash('happy', 2200); say('Que flor linda! Obrigado!'); playReaction('flower'); render();
+    },
+    cake: function () {
+      dropToMouth('cake', 52, function () {
+        chew(8); say('Humm, que bolo gostoso!'); playReaction('cake');
+        hearts(stage.clientWidth / 2, stage.clientHeight * .35, 3); render();
       });
     },
-    furball: function () {
+    gift: function () {
       var r = stage.getBoundingClientRect();
-      var d = fxAt(ico('furball', 34), r.width * .12, r.height * .66, 'ball');
+      var d = fxAt(ico('gift', 52), r.width * .12, r.height * .6, 'ball');
       setTimeout(function () { d.remove(); }, 1750);
-      flash('happy', 2200); say('Hihi! Eu amo brincar!'); playReaction('furball'); render();
+      flash('happy', 2600); say('Um presente? Pra mim?!'); playReaction('gift');
+      hearts(stage.clientWidth / 2, stage.clientHeight * .35, 6); render();
     },
-    sardine: function () {
-      dropToMouth('sardine', 56, function () {
-        chew(9); say('Sardinha! Que luxo!'); playReaction('sardine');
-        hearts(stage.clientWidth / 2, stage.clientHeight * .35, 4); render();
-      });
-    },
-    rotten: function () {
-      dropToMouth('rotten', 54, function () {
-        chew(3, function () { setMouth('frown'); });
-        makeSick(4500, false); say('Eca! Que gosto horrível!'); playReaction('rotten'); render();
-      });
-    },
-    glove: function () {
+    pie: function () {
       var r = stage.getBoundingClientRect(), h = head().getBoundingClientRect();
-      var d = fxAt('<div style="transform:rotate(-90deg)">' + ico('glove', 64) + '</div>', h.left - r.left + h.width * .72, h.top - r.top + h.height * .3, 'punch');
-      setTimeout(function () { flash('hit', 500); flash('surprise', 700); makeDizzy(2600); playReaction('glove'); say('Aaai! Meu focinho!'); }, 320);
-      setTimeout(function () { d.remove(); }, 800); render();
+      var d = fxAt('<div style="transform:scaleX(-1)">' + ico('pie', 70) + '</div>', h.left - r.left + h.width * .72, h.top - r.top + h.height * .3, 'punch');
+      setTimeout(function () {
+        flash('hit', 500); flash('surprise', 700); cat.classList.add('creamy');
+        playReaction('pie'); say('Blub! Minha cara!');
+        setTimeout(function () { cat.classList.remove('creamy'); }, 4200);
+      }, 320);
+      setTimeout(function () { d.remove(); }, 800);
+      render();
     },
-    poison: function () {
-      dropToMouth('poison', 44, function () {
-        chew(2, function () { setMouth('frown'); });
-        makeSick(6500, true); say('Ai... minha barriguinha...'); playReaction('poison'); render();
+    mosquito: function () {
+      var h = head().getBoundingClientRect(), r = stage.getBoundingClientRect();
+      var d = fxAt(ico('mosquito', 34), h.left - r.left + h.width * .2, h.top - r.top + h.height * .3, 'buzz');
+      setTimeout(function () { d.remove(); }, 3300);
+      makeDizzy(3000); say('Zzzzz... sai daqui, mosquito!'); playReaction('mosquito');
+      busy = true; setMouth('frown'); setTimeout(function () { busy = false; render(); }, 3000);
+      render();
+    },
+    pepper: function () {
+      dropToMouth('pepper', 44, function () {
+        chew(2, function () { setMouth('open'); });
+        cat.classList.add('hot'); clearTimeout(sickTimer);
+        sickTimer = setTimeout(function () { cat.classList.remove('hot'); }, 5500);
+        makeDizzy(3500); say('AAAH! Tá pegando fogo!'); playReaction('pepper'); render();
       });
     }
   };
@@ -299,7 +289,7 @@
 
   function renderItems() {
     var box = $('#items'); box.innerHTML = '';
-    [['good', 'Love the ' + A().en], ['bad', 'Hate the ' + A().en]].forEach(function (g) {
+    [['good', 'Love'], ['bad', 'Hate']].forEach(function (g) {
       var lab = document.createElement('div'); lab.className = 'rowlabel ' + g[0]; lab.textContent = g[1]; box.appendChild(lab);
       var row = document.createElement('div'); row.className = 'items';
       ITEMS.filter(function (it) { return it.side === g[0]; }).forEach(function (it) {
@@ -372,39 +362,6 @@
     }
   }
 
-  /* telas */
-  function show(id) {
-    ['animal', 'game'].forEach(function (n) { $('#screen-' + n).hidden = (n !== id); });
-    window.scrollTo(0, 0);
-  }
-  function previewOf(a, vb) {
-    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', vb || '50 22 200 180');
-    svg.appendChild(cat.querySelector('.h-' + a).cloneNode(true));
-    return svg;
-  }
-  function buildAnimalCards() {
-    var box = $('#animalCards'); box.innerHTML = '';
-    Object.keys(ANIMALS).forEach(function (a) {
-      var b = document.createElement('button'); b.type = 'button'; b.className = 'card';
-      b.setAttribute('aria-label', 'Escolher ' + ANIMALS[a].pt);
-      b.appendChild(previewOf(a));
-      var n = document.createElement('span'); n.textContent = ANIMALS[a].name; b.appendChild(n);
-      var k = document.createElement('small'); k.textContent = ANIMALS[a].pt; b.appendChild(k);
-      b.addEventListener('click', function () { chooseAnimal(a); });
-      box.appendChild(b);
-    });
-  }
-  function chooseAnimal(a) {
-    s.animal = a; cat.setAttribute('data-animal', a);
-    $('#petName').firstChild.nodeValue = ANIMALS[a].name;
-    $('#petKind').textContent = ANIMALS[a].pt + ' de terno';
-    cat.classList.remove('sick', 'dizzy');
-    renderItems(); render(); show('game');
-    setTimeout(function () { say(A().noise + '! O que você vai fazer comigo?', 3200); }, 400);
-  }
-
-  $('#back').addEventListener('click', function () { show('animal'); });
   $('#creditsBtn').addEventListener('click', openShop);
   $('#shopClose').addEventListener('click', closeShop);
   $('#recoverBtn').addEventListener('click', recover);
@@ -413,23 +370,16 @@
     muted = !muted; this.textContent = muted ? 'Mudo' : 'Som'; this.setAttribute('aria-pressed', String(muted));
   });
   cat.addEventListener('pointerdown', function (e) {
-    var t = e.target;
-    if (t.closest('.tail')) { tailGrab(); return; }
-    if (t.closest('.head-g')) { headTap(e); return; }
-    if (t.closest('#body-hit')) { poke(); }
+    var z = e.target.closest('.zone');
+    if (!z) return;
+    if (z.dataset.zone === 'hat') hatTap();
+    else if (z.dataset.zone === 'head') headTap(e);
+    else poke();
   });
 
-  /* olhos seguem o dedo */
-  document.addEventListener('pointermove', function (e) {
-    if ($('#screen-game').hidden) return;
-    var h = head().getBoundingClientRect();
-    var dx = e.clientX - (h.left + h.width / 2), dy = e.clientY - (h.top + h.height / 2);
-    var len = Math.hypot(dx, dy) || 1, k = Math.min(1, len / 160) * 4;
-    head().querySelectorAll('.pupil').forEach(function (p) { p.setAttribute('transform', 'translate(' + (dx / len * k).toFixed(1) + ' ' + (dy / len * k).toFixed(1) + ')'); });
-  });
-
-  buildAnimalCards();
+  renderItems();
   render();
+  setTimeout(function () { say(A().noise + '! Love ou Hate? Você decide!', 3200); }, 500);
   loadPacks();
   loadMe().then(handleReturn);
 })();

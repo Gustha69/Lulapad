@@ -24,7 +24,7 @@ module.exports = route('POST', async (req, res) => {
       price_data: {
         currency: 'brl',
         unit_amount: pack.amount,
-        product_data: { name: `${pack.credits} créditos - Bigodes, o Bicho de Terno` },
+        product_data: { name: `${pack.credits} créditos - Danilão: Love vs Hate` },
       },
     }],
     client_reference_id: u.id,

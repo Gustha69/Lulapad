@@ -79,9 +79,9 @@ test('cookie adulterado não herda a conta', async () => {
 
 test('use-item desconta, recusa saldo insuficiente e item inválido', async () => {
   const c = client(); await c('/api/me');
-  assert.equal((await c('/api/use-item', { itemId: 'fish' })).data.credits, 5);
-  assert.equal((await c('/api/use-item', { itemId: 'fish' })).data.credits, 0);
-  const no = await c('/api/use-item', { itemId: 'fish' });
+  assert.equal((await c('/api/use-item', { itemId: 'flower' })).data.credits, 5);
+  assert.equal((await c('/api/use-item', { itemId: 'flower' })).data.credits, 0);
+  const no = await c('/api/use-item', { itemId: 'flower' });
   assert.equal(no.status, 402); assert.equal(no.data.credits, 0);
   assert.equal((await c('/api/use-item', { itemId: 'hack' })).status, 400);
   assert.equal((await c('/api/use-item', { itemId: '__proto__' })).status, 400);
@@ -89,7 +89,7 @@ test('use-item desconta, recusa saldo insuficiente e item inválido', async () =
 
 test('cliques simultâneos nunca deixam o saldo negativo', async () => {
   const c = client(); await c('/api/me'); // 10 créditos, fish = 5
-  const rs = await Promise.all(Array.from({ length: 8 }, () => c('/api/use-item', { itemId: 'fish' })));
+  const rs = await Promise.all(Array.from({ length: 8 }, () => c('/api/use-item', { itemId: 'flower' })));
   assert.equal(rs.filter((r) => r.status === 200).length, 2);
   assert.equal((await c('/api/me')).data.credits, 0);
 });

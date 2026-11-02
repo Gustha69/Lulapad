@@ -1,22 +1,20 @@
 COMO COLOCAR SEUS PRÓPRIOS SONS
 
 1. Coloque os arquivos de áudio (.mp3 ou .ogg, curtos, de preferência até 3 segundos) nesta pasta,
-   por exemplo:  public/sounds/gato/luva.mp3
+   por exemplo:  public/sounds/dan/torta.mp3
 2. Abra public/js/app.js e procure por "var SOUNDS". Aponte cada reação para o arquivo:
 
    var SOUNDS = {
      all: { winLove: 'sounds/vitoria-amor.mp3', winHate: 'sounds/vitoria-odio.mp3' },
-     cat: { glove: 'sounds/gato/luva.mp3', fish: 'sounds/gato/peixe.mp3' }
+     dan: { pie: 'sounds/dan/torta.mp3', flower: 'sounds/dan/flor.mp3' }
    };
 
-   "all" vale para todos os personagens; o personagem escolhido tem prioridade sobre "all".
+   "all" vale para qualquer personagem; "dan" (o Danilão) tem prioridade sobre "all".
    Reação sem arquivo continua usando o som sintetizado.
 
 REAÇÕES DISPONÍVEIS
-  tap      carinho na cabeça          fish     item do bem
-  poke     cutucar a barriga          furball  item do bem
-  tail     puxar a cauda              sardine  item do bem
-  rotten   item do mal                glove    item do mal
-  poison   item do mal                winLove / winHate  quando um lado vence
+  tap      carinho na cabeça          flower, cake, gift    itens Love
+  poke     cutucar a barriga          pie, mosquito, pepper itens Hate
+  hat      mexer no chapéu            winLove / winHate     quando um lado vence
 
 Use só áudios que você criou ou tem licença para usar.

@@ -1,17 +1,17 @@
-# Bigodes, o Bicho de Terno
+# Danilão: Love vs Hate
 
-Jogo de pet virtual animado, publicado como **link web** (não é app). O jogador escolhe um bicho
-(gato Bigodes, cachorro Totó, porco Toicinho) de terno e gravata, interage com ele e usa **itens**
-que custam **créditos**. Créditos são comprados com dinheiro real via **Stripe Checkout** (cartão e Pix).
+Jogo web de brincadeira, publicado como **link** (não é app). Um personagem de desenho, o **Danilão**
+(homem de terno azul e chapéu de palha; arte em `public/img/danilao.webp`, feita pelo dono do projeto),
+reage aos **itens** que o jogador usa, gastando **créditos**. Créditos são comprados com dinheiro real via **Stripe Checkout** (cartão e Pix).
 
 ## Mecânica
 - Foco do jogo: a disputa **Love vs Hate**. Não existem mais fome, humor, energia, sono nem fala.
-  Tocar na cabeça/barriga (+1 love) e na cauda (+1 hate) é grátis.
-- Itens **do bem (azul)**: Peixe 5, Bolinha de pelos 10, Lata de sardinha 20.
-- Itens **do mal (vermelho)**: Peixe podre 5, Luva de boxe 15, Veneno 30.
+  Tocar na cabeça/barriga (+1 love) e no chapéu (+1 hate) é grátis.
+- Itens **Love (azul)**: Flor 5, Bolo 10, Presente 20.
+- Itens **Hate (vermelho)**, todos em tom de comédia: Torta na cara 5, Mosquito 15, Pimenta 30.
 - **Cabo de guerra** é o placar: cada item soma pontos iguais ao custo para seu lado; toques grátis somam 1.
-  Ao chegar a diferença de 100 aparece "O amor venceu!" / "O ódio venceu!" e zera.
-- Sons: `SOUNDS` em `public/js/app.js` aponta um arquivo por personagem e reação (veja
+  Ao chegar a diferença de 100 aparece "O Love venceu!" / "O Hate venceu!" e zera.
+- Sons: `SOUNDS` em `public/js/app.js` aponta um arquivo por reação (veja
   `public/sounds/LEIA-ME.txt`); sem arquivo, usa o som sintetizado.
 
 ## Estrutura
@@ -20,6 +20,7 @@ public/              front-end estático (servido na raiz do site)
   index.html
   css/style.css
   js/app.js          toda a lógica do jogo, em JS puro (sem build)
+  img/danilao.webp   arte do personagem (proporção 2:3); as reações são camadas SVG por cima
 api/                 backend: funções serverless Node (Vercel), uma rota por arquivo
   me.js              GET  /api/me        saldo; cria conta convidada na 1ª visita
   packs.js           GET  /api/packs     pacotes e preços (vêm do servidor)
@@ -40,7 +41,8 @@ DEPLOY.md            como publicar e testar pagamentos
 3. **Desconto é atômico**: `UPDATE ... SET credits = credits - $1 WHERE credits >= $1`. Nunca ler-e-depois-gravar.
 4. Todo movimento de crédito grava uma linha em `ledger` (auditoria).
 5. Nunca commitar `.env` nem chaves. Usar `sk_test_` até validar tudo.
-6. Não mudar o visual ao mexer em código: o CSS é o original, mais `[hidden]{display:none!important}`.
+6. O personagem é um **desenho/personagem fictício**. Não usar fotos nem retratos de pessoas reais,
+   nem trocar a arte por rosto de alguém sem autorização documentada. Itens do lado Hate ficam em tom de comédia.
 
 ## Login
 Mínimo possível: ao abrir o site vira uma **conta convidada** (cookie HttpOnly assinado, 1 ano).
