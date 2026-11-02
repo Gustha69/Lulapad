@@ -6,15 +6,15 @@ COMO COLOCAR SEUS PRÓPRIOS SONS
 
    var SOUNDS = {
      all: { winLove: 'sounds/vitoria-amor.mp3', winHate: 'sounds/vitoria-odio.mp3' },
-     dan: { pie: 'sounds/dan/torta.mp3', flower: 'sounds/dan/flor.mp3' }
+     dan: { pie: 'sounds/dan/torta.mp3', star: 'sounds/dan/estrela.mp3' }
    };
 
    "all" vale para qualquer personagem; "dan" (o Danilão) tem prioridade sobre "all".
    Reação sem arquivo continua usando o som sintetizado.
 
 REAÇÕES DISPONÍVEIS
-  tap      carinho na cabeça          flower, cake, gift    itens Love
-  poke     cutucar a barriga          pie, mosquito, pepper itens Hate
+  tap      carinho na cabeça          star, beer, picanha   itens Love
+  poke     cutucar a barriga          pie, stock, pepper    itens Hate
   hat      mexer no chapéu            winLove / winHate     quando um lado vence
 
 Use só áudios que você criou ou tem licença para usar.

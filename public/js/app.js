@@ -8,22 +8,22 @@
   var PACKS = [];
 
   var ICON = {
-    flower: '<svg viewBox="0 0 40 44"><rect x="18" y="20" width="4" height="22" rx="2" fill="#4caf50"/><path d="M20 32 Q10 28 8 22 Q16 22 20 30Z" fill="#4caf50"/><g fill="#ff7eb6"><circle cx="20" cy="9" r="7"/><circle cx="30" cy="16" r="7"/><circle cx="10" cy="16" r="7"/><circle cx="26" cy="6" r="6"/><circle cx="14" cy="6" r="6"/></g><circle cx="20" cy="14" r="6" fill="#ffd54a"/></svg>',
-    cake: '<svg viewBox="0 0 44 40"><path d="M4 34 L8 14 Q22 8 40 14 L40 34Z" fill="#f4d9a6"/><path d="M4 18 Q22 6 40 18 L40 24 Q34 20 28 25 Q22 20 16 25 Q10 20 4 24Z" fill="#fff4e6"/><path d="M4 30 H40" stroke="#c0392b" stroke-width="3"/><circle cx="22" cy="10" r="5" fill="#d6304a"/><rect x="21" y="2" width="2" height="5" fill="#6b4a2f"/></svg>',
-    gift: '<svg viewBox="0 0 44 44"><rect x="6" y="18" width="32" height="22" rx="3" fill="#ef5d5d"/><rect x="4" y="12" width="36" height="9" rx="3" fill="#ff8a8a"/><rect x="19" y="12" width="6" height="28" fill="#ffd54a"/><path d="M22 12 Q10 0 12 8 Q14 14 22 12 Q30 14 32 8 Q34 0 22 12Z" fill="#ffd54a"/></svg>',
+    star: '<svg viewBox="0 0 44 44"><path d="M22 3 L27.500 16 L41.500 17 L30.800 26.200 L34.200 40 L22 32.600 L9.800 40 L13.200 26.200 L2.500 17 L16.500 16Z" fill="#d62828" stroke="#a31515" stroke-width="2" stroke-linejoin="round"/></svg>',
+    beer: '<svg viewBox="0 0 44 48"><path d="M12 8 Q22 3 32 8 L33 40 Q22 45 11 40Z" fill="#e8b923"/><path d="M12 8 Q22 3 32 8 L32.500 14 Q22 18 11.500 14Z" fill="#fff8e1"/><path d="M12 8 Q22 12 32 8" stroke="#c9a017" stroke-width="2" fill="none"/><rect x="14" y="22" width="16" height="10" rx="2" fill="#d62828"/><path d="M15 12 Q16 5 20 6 Q22 2 26 6 Q30 5 29 12Z" fill="#fff"/></svg>',
+    picanha: '<svg viewBox="0 0 54 44"><path d="M5 26 Q6 8 28 6 Q50 8 50 26 Q48 40 28 40 Q8 40 5 26Z" fill="#b3261e"/><path d="M5 26 Q6 8 28 6 Q50 8 50 18 Q40 12 28 13 Q14 13 5 26Z" fill="#fff0d6"/><path d="M14 30 Q24 24 34 30 M18 35 Q28 30 40 34" stroke="#7a1812" stroke-width="2" fill="none"/><circle cx="40" cy="26" r="2.500" fill="#7a1812"/></svg>',
+    stock: '<svg viewBox="0 0 52 48"><rect x="2" y="2" width="48" height="44" rx="6" fill="#2a2a33"/><path d="M8 12 L18 20 L26 14 L44 34" stroke="#ef5d5d" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M44 22 L44 36 L30 36" stroke="#ef5d5d" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     pie: '<svg viewBox="0 0 48 40"><ellipse cx="24" cy="32" rx="22" ry="6" fill="#e8e1d2"/><path d="M6 30 Q8 14 24 12 Q40 14 42 30Z" fill="#fff8ee"/><path d="M12 22 Q18 16 24 20 Q30 14 36 22" stroke="#e8dcc6" stroke-width="2" fill="none"/><circle cx="24" cy="10" r="5" fill="#d6304a"/></svg>',
-    mosquito: '<svg viewBox="0 0 48 40"><ellipse cx="14" cy="12" rx="12" ry="6" fill="#cfe8f5" opacity=".85" transform="rotate(-25 14 12)"/><ellipse cx="30" cy="10" rx="12" ry="6" fill="#cfe8f5" opacity=".85" transform="rotate(20 30 10)"/><ellipse cx="22" cy="24" rx="10" ry="5" fill="#2a2a33"/><circle cx="33" cy="24" r="5" fill="#2a2a33"/><path d="M38 26 L46 32" stroke="#2a2a33" stroke-width="2" stroke-linecap="round"/><path d="M14 28 L8 36 M20 29 L18 38 M26 29 L28 38" stroke="#2a2a33" stroke-width="1.500"/></svg>',
     pepper: '<svg viewBox="0 0 44 44"><path d="M12 12 Q4 24 12 36 Q18 42 32 38 Q40 34 36 24 Q30 30 24 26 Q20 20 20 12Z" fill="#e53935"/><path d="M12 12 Q16 6 22 8 L20 14Z" fill="#43a047"/><path d="M10 14 Q8 6 16 4" stroke="#43a047" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
     heart: '<svg viewBox="0 0 24 24"><path d="M12 21s-8-5.6-8-11.2C4 6.600 6.400 5 8.600 5c1.500 0 2.800.8 3.400 2 .6-1.200 1.900-2 3.400-2C17.600 5 20 6.600 20 9.800 20 15.400 12 21 12 21z" fill="#ef4f6b"/></svg>'
   };
   /* side: good = azul (bem), bad = vermelho (mal). Os pontos no cabo de guerra são iguais ao custo.
      ATENÇÃO: o custo que vale é o do servidor (api/_lib/catalog.js). Aqui é só para exibir. */
   var ITEMS = [
-    { id: 'flower', name: 'Flor', cost: 5, side: 'good' },
-    { id: 'cake', name: 'Bolo', cost: 10, side: 'good' },
-    { id: 'gift', name: 'Presente', cost: 20, side: 'good' },
+    { id: 'star', name: 'Estrela', cost: 5, side: 'good' },
+    { id: 'beer', name: 'Cerveja', cost: 10, side: 'good' },
+    { id: 'picanha', name: 'Picanha', cost: 20, side: 'good' },
     { id: 'pie', name: 'Torta na cara', cost: 5, side: 'bad' },
-    { id: 'mosquito', name: 'Mosquito', cost: 15, side: 'bad' },
+    { id: 'stock', name: 'Queda da bolsa', cost: 15, side: 'bad' },
     { id: 'pepper', name: 'Pimenta', cost: 30, side: 'bad' }
   ];
   var WIN_AT = 100;
@@ -77,7 +77,7 @@
   /* ---------- SONS ----------
      Para cada personagem e reação você pode apontar um arquivo de áudio em SOUNDS.
      Reações: tap (carinho na cabeça), poke (cutucar a barriga), hat (mexer no chapéu),
-     flower, cake, gift (itens Love), pie, mosquito, pepper (itens Hate),
+     star, beer, picanha (itens Love), pie, stock, pepper (itens Hate),
      winLove, winHate (vitórias). O que não tiver arquivo usa o som sintetizado.
      Exemplo:  dan: { pie: 'sounds/dan/torta.mp3', winLove: 'sounds/dan/ganhou.mp3' }
      'all' vale para todos os personagens. Veja public/sounds/LEIA-ME.txt */
@@ -85,7 +85,7 @@
     all: {},
     dan: {}
   };
-  var SYNTH_PITCH = { tap: 1.1, poke: 1.25, hat: .9, flower: 1.2, cake: .9, gift: 1.3, pie: .6, mosquito: 1.5, pepper: .7, winLove: 1.2, winHate: .6 };
+  var SYNTH_PITCH = { tap: 1.1, poke: 1.25, hat: .9, star: 1.2, beer: .9, picanha: 1.0, pie: .6, stock: .7, pepper: .7, winLove: 1.2, winHate: .6 };
   function playReaction(name) {
     if (muted) return;
     var url = (SOUNDS[CHAR.id] && SOUNDS[CHAR.id][name]) || (SOUNDS.all && SOUNDS.all[name]);
@@ -219,22 +219,21 @@
   }
 
   var ACTIONS = {
-    flower: function () {
-      hearts(stage.clientWidth / 2, stage.clientHeight * .35, 5);
-      flash('happy', 2200); say('Que flor linda! Obrigado!'); playReaction('flower'); render();
+    star: function () {
+      hearts(stage.clientWidth / 2, stage.clientHeight * .4, 5);
+      flash('happy', 2200); say('Essa estrela é a melhor!'); playReaction('star'); render();
     },
-    cake: function () {
-      dropToMouth('cake', 52, function () {
-        chew(8); say('Humm, que bolo gostoso!'); playReaction('cake');
-        hearts(stage.clientWidth / 2, stage.clientHeight * .35, 3); render();
+    beer: function () {
+      dropToMouth('beer', 44, function () {
+        chew(8); say('Ahh, geladinha!'); playReaction('beer');
+        hearts(stage.clientWidth / 2, stage.clientHeight * .4, 3); render();
       });
     },
-    gift: function () {
-      var r = stage.getBoundingClientRect();
-      var d = fxAt(ico('gift', 52), r.width * .12, r.height * .6, 'ball');
-      setTimeout(function () { d.remove(); }, 1750);
-      flash('happy', 2600); say('Um presente? Pra mim?!'); playReaction('gift');
-      hearts(stage.clientWidth / 2, stage.clientHeight * .35, 6); render();
+    picanha: function () {
+      dropToMouth('picanha', 62, function () {
+        chew(11); flash('happy', 3200); say('Picanha! Hoje tem churrasco!'); playReaction('picanha');
+        hearts(stage.clientWidth / 2, stage.clientHeight * .4, 6); render();
+      });
     },
     pie: function () {
       var r = stage.getBoundingClientRect(), h = head().getBoundingClientRect();
@@ -247,13 +246,11 @@
       setTimeout(function () { d.remove(); }, 800);
       render();
     },
-    mosquito: function () {
-      var h = head().getBoundingClientRect(), r = stage.getBoundingClientRect();
-      var d = fxAt(ico('mosquito', 34), h.left - r.left + h.width * .2, h.top - r.top + h.height * .3, 'buzz');
-      setTimeout(function () { d.remove(); }, 3300);
-      makeDizzy(3000); say('Zzzzz... sai daqui, mosquito!'); playReaction('mosquito');
-      busy = true; setMouth('frown'); setTimeout(function () { busy = false; render(); }, 3000);
-      render();
+    stock: function () {
+      var d = fxAt(ico('stock', 70), stage.clientWidth * .5 - 35, 0, 'fall');
+      setTimeout(function () { d.remove(); }, 2300);
+      setTimeout(function () { flash('surprise', 900); makeDizzy(2200); }, 1300);
+      say('Ih... a bolsa despencou!'); playReaction('stock'); render();
     },
     pepper: function () {
       dropToMouth('pepper', 44, function () {

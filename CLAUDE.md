@@ -7,9 +7,9 @@ reage aos **itens** que o jogador usa, gastando **créditos**. Créditos são co
 ## Mecânica
 - Foco do jogo: a disputa **Love vs Hate**. Não existem mais fome, humor, energia, sono nem fala.
   Tocar na cabeça/barriga (+1 love) e no chapéu (+1 hate) é grátis.
-- Itens **Love (azul)**: Flor 5, Bolo 10, Presente 20.
-- Itens **Hate (vermelho)**, todos em tom de comédia: Torta na cara 5, Mosquito 15, Pimenta 30.
-- **Cabo de guerra** é o placar: cada item soma pontos iguais ao custo para seu lado; toques grátis somam 1.
+- Itens **Love (azul)**: Estrela vermelha 5, Cerveja 10, Picanha 20.
+- Itens **Hate (vermelho)**, todos em tom de comédia: Torta na cara 5, Queda da bolsa 15, Pimenta 30.
+- **Cabo de guerra** é o placar: **1 crédito gasto = 1 ponto** para o lado do item; toques grátis somam 1.
   Ao chegar a diferença de 100 aparece "O Love venceu!" / "O Hate venceu!" e zera.
 - Sons: `SOUNDS` em `public/js/app.js` aponta um arquivo por reação (veja
   `public/sounds/LEIA-ME.txt`); sem arquivo, usa o som sintetizado.

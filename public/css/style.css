@@ -227,3 +227,5 @@ button:focus-visible, input:focus-visible { outline: 3px solid #fff; outline-off
 @keyframes jolt { 0% { transform: translateX(0); } 25% { transform: translateX(-14px) rotate(-2deg); } 100% { transform: translateX(0); } }
 @keyframes tilt { 0% { transform: rotate(0); } 30% { transform: rotate(-3deg) translateY(-8px); } 65% { transform: rotate(1.6deg); } 100% { transform: rotate(0); } }
 @media (prefers-reduced-motion: reduce) { #cat .char { animation: none !important; } }
+.fall { animation: fall 2.2s cubic-bezier(.4,0,1,1) forwards; }
+@keyframes fall { 0% { transform: translateY(-20px) rotate(0); opacity: 1; } 60% { transform: translateY(240px) rotate(8deg); } 100% { transform: translateY(420px) rotate(-12deg); opacity: .2; } }
