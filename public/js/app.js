@@ -95,39 +95,52 @@
     }
   };
   var SYNTH_PITCH = { tap: 1.1, poke: 1.25, hat: .9, star: 1.2, beer: .9, picanha: 1.0, piggy: 1.5, stock: .7, finger: 1.3, winLove: 1.2, winHate: .6 };
-  var audioCache = {}, currentAudio = null, audioUnlocked = false;
-  function audioFor(url) {
-    if (!audioCache[url]) { var a = new Audio(url); a.preload = 'auto'; audioCache[url] = a; }
-    return audioCache[url];
+  /* Áudio: os sons são carregados na memória (Web Audio) e liberados no primeiro toque do usuário.
+     Assim funcionam no iPhone/iPad, mesmo quando tocam depois de uma chamada ao servidor. */
+  var actx = null, buffers = {}, currentSrc = null, audioReady = false;
+  function getCtx() {
+    if (!actx) { try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+    return actx;
   }
   function allSoundUrls() {
     var out = [];
     Object.keys(SOUNDS).forEach(function (g) { Object.keys(SOUNDS[g]).forEach(function (k) { out.push(SOUNDS[g][k]); }); });
     return out;
   }
-  /* celulares só liberam áudio depois de um toque: no primeiro toque "destravamos" todos os arquivos */
-  function unlockAudio() {
-    if (audioUnlocked) return;
-    audioUnlocked = true;
+  function loadBuffers() {
+    var c = getCtx(); if (!c) return;
     allSoundUrls().forEach(function (u) {
-      var a = audioFor(u);
-      a.muted = true;
-      var pr = a.play();
-      if (pr && pr.then) pr.then(function () { a.pause(); a.currentTime = 0; a.muted = false; }).catch(function () { a.muted = false; });
-      else a.muted = false;
+      if (buffers[u]) return;
+      fetch(u).then(function (r) { return r.arrayBuffer(); }).then(function (ab) {
+        return new Promise(function (ok, no) { c.decodeAudioData(ab, ok, no); });
+      }).then(function (b) { buffers[u] = b; }).catch(function () {});
     });
   }
-  document.addEventListener('pointerdown', unlockAudio, { once: true });
+  function unlockAudio() {
+    var c = getCtx(); if (!c) return;
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {} /* toca mesmo com o botão de silencioso (iOS 16.4+) */
+    try { c.resume(); } catch (e) {}
+    try {
+      var b = c.createBuffer(1, 1, 22050), src = c.createBufferSource();
+      src.buffer = b; src.connect(c.destination); src.start(0);
+    } catch (e) {}
+    if (c.state === 'running') {
+      audioReady = true;
+      ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'click', 'keydown'].forEach(function (ev) { document.removeEventListener(ev, unlockAudio, true); });
+    }
+  }
+  ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'click', 'keydown'].forEach(function (ev) { document.addEventListener(ev, unlockAudio, true); });
+  function stopSound() { if (currentSrc) { try { currentSrc.stop(); } catch (e) {} currentSrc = null; } }
   function playReaction(name) {
     if (muted) return;
     var url = (SOUNDS[CHAR.id] && SOUNDS[CHAR.id][name]) || (SOUNDS.all && SOUNDS.all[name]);
-    if (url) {
+    var c = getCtx();
+    if (url && c && buffers[url]) {
       try {
-        if (currentAudio) { currentAudio.pause(); }
-        var a = audioFor(url);
-        a.currentTime = 0; a.muted = false; currentAudio = a;
-        var pr = a.play();
-        if (pr && pr.catch) pr.catch(function () { cry(SYNTH_PITCH[name] || 1); });
+        c.resume(); stopSound();
+        var src = c.createBufferSource(); src.buffer = buffers[url];
+        var g = c.createGain(); g.gain.value = 1;
+        src.connect(g); g.connect(c.destination); src.start(0); currentSrc = src;
         return;
       } catch (e) {}
     }
@@ -139,7 +152,7 @@
   function cry(k) {
     if (muted) return;
     try {
-      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      ac = getCtx(); if (!ac) return; ac.resume();
       var t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain(), f = ac.createBiquadFilter(), dur;
       k = k || 1; f.type = 'lowpass'; f.frequency.value = 1500;
       o.type = 'sawtooth'; dur = .4;
@@ -442,7 +455,7 @@
   $('#recoverBtn').addEventListener('click', recover);
   $('#shop').addEventListener('click', function (e) { if (e.target === this) closeShop(); });
   $('#mute').addEventListener('click', function () {
-    muted = !muted; this.textContent = muted ? 'Mudo' : 'Som'; this.setAttribute('aria-pressed', String(muted));
+    muted = !muted; if (muted) stopSound(); this.textContent = muted ? 'Mudo' : 'Som'; this.setAttribute('aria-pressed', String(muted));
   });
   cat.addEventListener('pointerdown', function (e) {
     var z = e.target.closest('.zone');
@@ -452,6 +465,7 @@
     else poke();
   });
 
+  loadBuffers();
   renderItems();
   render();
   setTimeout(function () { say(A().noise + '! Love ou Hate? Você decide!', 3200); }, 500);
