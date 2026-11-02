@@ -408,7 +408,11 @@
     if (!code) return;
     api('/api/recover', { code: code }).then(function (d) {
       applyMe(d); closeShop(); toast('Conta recuperada! Saldo: ' + d.credits + ' créditos.');
-    }).catch(function () { toast('Código não encontrado.'); });
+    }).catch(function (err) {
+      if (err.status === 404) toast('Código não encontrado.');
+      else if (err.status === 400) toast('Código inválido: são 12 letras e números (XXXX-XXXX-XXXX).');
+      else toast('Erro no servidor (' + (err.status || 'sem conexão') + '). Tente de novo.');
+    });
   }
   function openShop() { $('#shop').hidden = false; }
   function closeShop() { $('#shop').hidden = true; }
