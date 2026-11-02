@@ -14,7 +14,7 @@ COMO COLOCAR SEUS PRÓPRIOS SONS
 
 REAÇÕES DISPONÍVEIS
   tap      carinho na cabeça          star, beer, picanha   itens Love
-  poke     cutucar a barriga          pie, stock, pepper    itens Hate
+  poke     cutucar a barriga          piggy, stock, finger  itens Hate
   hat      mexer no chapéu            winLove / winHate     quando um lado vence
 
 Use só áudios que você criou ou tem licença para usar.

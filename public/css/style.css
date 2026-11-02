@@ -277,3 +277,37 @@ button:focus-visible, input:focus-visible { outline: 3px solid #fff; outline-off
   80% { transform: scale(1.05) rotate(0); opacity: 1; }
   100% { transform: scale(.2) translateY(-60px) rotate(120deg); opacity: 0; }
 }
+
+/* cofrinho: aparece na mesa, a moeda sai da mão, faz arco e cai na fenda */
+.pigpop { animation: pigpop 3.4s ease-in-out forwards; z-index: 3; }
+.coinfly { animation: coinfly 3.2s ease-in-out forwards; z-index: 5; }
+@keyframes pigpop {
+  0% { transform: scale(0); opacity: 0; } 10% { transform: scale(1.15); opacity: 1; } 16% { transform: scale(1); }
+  84% { transform: scale(1); } 88% { transform: scale(1.12, .86); } 92% { transform: scale(.96, 1.06); } 96% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(.2); opacity: 0; }
+}
+@keyframes coinfly {
+  0%, 12% { transform: translate(0, 0) scale(.3); opacity: 0; }
+  20% { transform: translate(0, calc(var(--u) * -70)) scale(1); opacity: 1; }
+  52% { transform: translate(calc(var(--u) * -275), calc(var(--u) * -250)) scale(1) rotate(360deg); }
+  70% { transform: translate(calc(var(--u) * -275), calc(var(--u) * -130)) rotate(540deg); }
+  84% { transform: translate(calc(var(--u) * -275), calc(var(--u) * 10)) scale(1) rotate(720deg); opacity: 1; }
+  90%, 100% { transform: translate(calc(var(--u) * -275), calc(var(--u) * 35)) scale(.5); opacity: 0; }
+}
+/* dedinho: truque de mágica, sai da mão, flutua, balança e volta */
+.fingermagic { animation: fingermagic 3.7s ease-in-out forwards; z-index: 4; }
+.sparkle { animation: sparkle .9s ease-out forwards; z-index: 5; }
+@keyframes fingermagic {
+  0%, 8% { transform: translate(0, 0) rotate(0); opacity: 0; }
+  14% { transform: translate(0, calc(var(--u) * -30)); opacity: 1; }
+  40% { transform: translate(calc(var(--u) * 30), calc(var(--u) * -300)) rotate(-18deg); }
+  50% { transform: translate(calc(var(--u) * 30), calc(var(--u) * -300)) rotate(18deg); }
+  58% { transform: translate(calc(var(--u) * 30), calc(var(--u) * -300)) rotate(-18deg); }
+  66% { transform: translate(calc(var(--u) * 30), calc(var(--u) * -300)) rotate(18deg); }
+  74% { transform: translate(calc(var(--u) * 30), calc(var(--u) * -300)) rotate(0); }
+  90% { transform: translate(0, calc(var(--u) * -30)); opacity: 1; }
+  100% { transform: translate(0, 0); opacity: 0; }
+}
+@keyframes sparkle {
+  0% { transform: scale(0) rotate(0); opacity: 0; } 40% { transform: scale(1.2) rotate(90deg); opacity: 1; } 100% { transform: scale(0) rotate(180deg); opacity: 0; }
+}

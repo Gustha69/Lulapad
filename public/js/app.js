@@ -11,9 +11,11 @@
     star: '<svg viewBox="0 0 44 44"><path d="M22 3 L27.500 16 L41.500 17 L30.800 26.200 L34.200 40 L22 32.600 L9.800 40 L13.200 26.200 L2.500 17 L16.500 16Z" fill="#d62828" stroke="#a31515" stroke-width="2" stroke-linejoin="round"/></svg>',
     beer: '<svg viewBox="0 0 44 48"><path d="M12 8 Q22 3 32 8 L33 40 Q22 45 11 40Z" fill="#e8b923"/><path d="M12 8 Q22 3 32 8 L32.500 14 Q22 18 11.500 14Z" fill="#fff8e1"/><path d="M12 8 Q22 12 32 8" stroke="#c9a017" stroke-width="2" fill="none"/><rect x="14" y="22" width="16" height="10" rx="2" fill="#d62828"/><path d="M15 12 Q16 5 20 6 Q22 2 26 6 Q30 5 29 12Z" fill="#fff"/></svg>',
     picanha: '<svg viewBox="0 0 54 44"><path d="M5 26 Q6 8 28 6 Q50 8 50 26 Q48 40 28 40 Q8 40 5 26Z" fill="#b3261e"/><path d="M5 26 Q6 8 28 6 Q50 8 50 18 Q40 12 28 13 Q14 13 5 26Z" fill="#fff0d6"/><path d="M14 30 Q24 24 34 30 M18 35 Q28 30 40 34" stroke="#7a1812" stroke-width="2" fill="none"/><circle cx="40" cy="26" r="2.500" fill="#7a1812"/></svg>',
+    piggy: '<svg viewBox="0 0 64 52"><ellipse cx="32" cy="28" rx="24" ry="18" fill="#f4a5b5"/><path d="M20 12 L24 4 L30 12Z" fill="#ee8fa5"/><rect x="14" y="40" width="7" height="10" rx="3" fill="#ee8fa5"/><rect x="43" y="40" width="7" height="10" rx="3" fill="#ee8fa5"/><ellipse cx="53" cy="29" rx="7" ry="6" fill="#ee8fa5"/><circle cx="51" cy="29" r="1.500" fill="#b04a63"/><circle cx="55" cy="29" r="1.500" fill="#b04a63"/><circle cx="44" cy="22" r="2.500" fill="#2b2118"/><rect x="24" y="10" width="14" height="3.500" rx="1.700" fill="#b04a63"/><path d="M8 26 Q2 22 5 17" stroke="#ee8fa5" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
+    coin: '<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="#f6c445" stroke="#c99a17" stroke-width="3"/><circle cx="20" cy="20" r="11" fill="none" stroke="#e0a91c" stroke-width="2"/><rect x="18" y="12" width="4" height="16" rx="2" fill="#c99a17"/></svg>',
+    finger: '<svg viewBox="0 0 30 64"><rect x="5" y="4" width="20" height="58" rx="10" fill="#f2b98a" stroke="#d99a68" stroke-width="2"/><path d="M9 10 Q15 4 21 10 L21 20 Q15 24 9 20Z" fill="#fde0c8"/><path d="M8 38 H22 M8 48 H22" stroke="#d99a68" stroke-width="1.500"/></svg>',
+    sparkle: '<svg viewBox="0 0 40 40"><path d="M20 0 L24 16 L40 20 L24 24 L20 40 L16 24 L0 20 L16 16Z" fill="#fff6a8"/></svg>',
     stock: '<svg viewBox="0 0 52 48"><rect x="2" y="2" width="48" height="44" rx="6" fill="#2a2a33"/><path d="M8 12 L18 20 L26 14 L44 34" stroke="#ef5d5d" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M44 22 L44 36 L30 36" stroke="#ef5d5d" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    pie: '<svg viewBox="0 0 48 40"><ellipse cx="24" cy="32" rx="22" ry="6" fill="#e8e1d2"/><path d="M6 30 Q8 14 24 12 Q40 14 42 30Z" fill="#fff8ee"/><path d="M12 22 Q18 16 24 20 Q30 14 36 22" stroke="#e8dcc6" stroke-width="2" fill="none"/><circle cx="24" cy="10" r="5" fill="#d6304a"/></svg>',
-    pepper: '<svg viewBox="0 0 44 44"><path d="M12 12 Q4 24 12 36 Q18 42 32 38 Q40 34 36 24 Q30 30 24 26 Q20 20 20 12Z" fill="#e53935"/><path d="M12 12 Q16 6 22 8 L20 14Z" fill="#43a047"/><path d="M10 14 Q8 6 16 4" stroke="#43a047" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
     heart: '<svg viewBox="0 0 24 24"><path d="M12 21s-8-5.6-8-11.2C4 6.600 6.400 5 8.600 5c1.500 0 2.800.8 3.400 2 .6-1.200 1.900-2 3.400-2C17.600 5 20 6.600 20 9.800 20 15.400 12 21 12 21z" fill="#ef4f6b"/></svg>'
   };
   /* side: good = azul (bem), bad = vermelho (mal). Os pontos no cabo de guerra são iguais ao custo.
@@ -22,9 +24,9 @@
     { id: 'star', name: 'Estrela', cost: 5, side: 'good' },
     { id: 'beer', name: 'Cerveja', cost: 10, side: 'good' },
     { id: 'picanha', name: 'Picanha', cost: 20, side: 'good' },
-    { id: 'pie', name: 'Torta na cara', cost: 5, side: 'bad' },
+    { id: 'piggy', name: 'Cofrinho', cost: 5, side: 'bad' },
     { id: 'stock', name: 'Queda da bolsa', cost: 15, side: 'bad' },
-    { id: 'pepper', name: 'Pimenta', cost: 30, side: 'bad' }
+    { id: 'finger', name: 'Dedinho', cost: 30, side: 'bad' }
   ];
   var WIN_AT = 100;
 
@@ -77,15 +79,15 @@
   /* ---------- SONS ----------
      Para cada personagem e reação você pode apontar um arquivo de áudio em SOUNDS.
      Reações: tap (carinho na cabeça), poke (cutucar a barriga), hat (mexer no chapéu),
-     star, beer, picanha (itens Love), pie, stock, pepper (itens Hate),
+     star, beer, picanha (itens Love), piggy, stock, finger (itens Hate),
      winLove, winHate (vitórias). O que não tiver arquivo usa o som sintetizado.
-     Exemplo:  dan: { pie: 'sounds/dan/torta.mp3', winLove: 'sounds/dan/ganhou.mp3' }
+     Exemplo:  dan: { piggy: 'sounds/dan/moeda.mp3', winLove: 'sounds/dan/ganhou.mp3' }
      'all' vale para todos os personagens. Veja public/sounds/LEIA-ME.txt */
   var SOUNDS = {
     all: {},
     dan: {}
   };
-  var SYNTH_PITCH = { tap: 1.1, poke: 1.25, hat: .9, star: 1.2, beer: .9, picanha: 1.0, pie: .6, stock: .7, pepper: .7, winLove: 1.2, winHate: .6 };
+  var SYNTH_PITCH = { tap: 1.1, poke: 1.25, hat: .9, star: 1.2, beer: .9, picanha: 1.0, piggy: 1.5, stock: .7, finger: 1.3, winLove: 1.2, winHate: .6 };
   function playReaction(name) {
     if (muted) return;
     var url = (SOUNDS[CHAR.id] && SOUNDS[CHAR.id][name]) || (SOUNDS.all && SOUNDS.all[name]);
@@ -213,6 +215,17 @@
   }
   function sipping(on) { cat.classList.toggle('talking', on); }
 
+  /* efeito posicionado em coordenadas da arte original (1024x1536), centrado em (cx, cy) */
+  function icoFill(key) { return '<div style="width:100%">' + ICON[key] + '</div>'; }
+  function fxArt(html, cx, cy, w, cls) {
+    var d = fxAt(html, 0, 0, cls);
+    d.style.left = 'calc(var(--u) * ' + (cx - w / 2) + ')';
+    d.style.top = 'calc(var(--u) * ' + (cy - w / 2) + ')';
+    d.style.width = 'calc(var(--u) * ' + w + ')';
+    return d;
+  }
+  function later(fn, ms) { setTimeout(fn, ms); }
+
   /* efeitos de itens */
   function dropToMouth(key, w, cb) {
     var m = mouthEl().getBoundingClientRect(), r = stage.getBoundingClientRect();
@@ -256,15 +269,12 @@
       setTimeout(function () { sipping(false); say('Picanha! Hoje tem churrasco!'); flash('happy', 2400); hearts(stage.clientWidth / 2, stage.clientHeight * .4, 6); }, 3200);
       render();
     },
-    pie: function () {
-      var r = stage.getBoundingClientRect(), h = head().getBoundingClientRect();
-      var d = fxAt('<div style="transform:scaleX(-1)">' + ico('pie', 70) + '</div>', h.left - r.left + h.width * .72, h.top - r.top + h.height * .3, 'punch');
-      setTimeout(function () {
-        flash('hit', 500); flash('surprise', 700); cat.classList.add('creamy');
-        playReaction('pie'); say('Blub! Minha cara!');
-        setTimeout(function () { cat.classList.remove('creamy'); }, 4200);
-      }, 320);
-      setTimeout(function () { d.remove(); }, 800);
+    piggy: function () {
+      var pig = fxArt(icoFill('piggy'), 515, 1380, 270, 'pigpop');
+      var coin = fxArt(icoFill('coin'), 790, 1300, 130, 'coinfly');
+      say('Plim! Uma moedinha!'); playReaction('piggy');
+      later(function () { flash('surprise', 500); }, 300);
+      later(function () { pig.remove(); coin.remove(); flash('happy', 1800); say('Guardadinho no cofrinho!'); hearts(stage.clientWidth / 2, stage.clientHeight * .4, 3); }, 3400);
       render();
     },
     stock: function () {
@@ -273,15 +283,14 @@
       setTimeout(function () { flash('surprise', 900); flash('hit', 500); makeDizzy(2200); }, 1300);
       say('Ih... a bolsa despencou!'); playReaction('stock'); render();
     },
-    pepper: function () {
-      handToMouth('pepper', 46, 'chili', 2600);
-      say('Uma pimentinha...'); playReaction('pepper');
-      setTimeout(function () {
-        cat.classList.add('hot'); clearTimeout(sickTimer);
-        sickTimer = setTimeout(function () { cat.classList.remove('hot'); }, 5200);
-        sipping(true); makeDizzy(3500); say('AAAH! Tá pegando fogo!');
-      }, 1200);
-      setTimeout(function () { sipping(false); }, 2800);
+    finger: function () {
+      var spark = fxArt(icoFill('sparkle'), 790, 1280, 140, 'sparkle');
+      var finger = fxArt(icoFill('finger'), 790, 1290, 105, 'fingermagic');
+      say('Mágica! Olha só o dedinho...'); playReaction('finger');
+      later(function () { flash('surprise', 900); }, 500);
+      later(function () { say('Cadê o dedinho? Tchan! Tá aqui!'); }, 2400);
+      later(function () { spark.remove(); var sp2 = fxArt(icoFill('sparkle'), 790, 1280, 140, 'sparkle'); later(function () { sp2.remove(); }, 900); }, 3300);
+      later(function () { finger.remove(); flash('happy', 1800); hearts(stage.clientWidth / 2, stage.clientHeight * .4, 3); }, 3700);
       render();
     }
   };
